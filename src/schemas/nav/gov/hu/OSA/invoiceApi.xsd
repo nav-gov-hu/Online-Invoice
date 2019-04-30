@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v1.0 2018/05/30
+# Version: v1.1 2019/02/05
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/1.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/1.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/1.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/1.0/data" schemaLocation="invoiceData.xsd"/>
@@ -202,6 +202,12 @@
 					<xs:documentation xml:lang="en">Default</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="1.1">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Adatminőség javítás</xs:documentation>
+					<xs:documentation xml:lang="en">Data quality improvement</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Sha512HashType">
@@ -338,6 +344,12 @@
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="originalRequestVersion" type="RequestVersionType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az adatszolgáltatás requestVersion értéke</xs:documentation>
+					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="BasicHeaderType">
@@ -358,7 +370,7 @@
 					<xs:documentation xml:lang="en">UTC time of the request/response</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="requestVersion" type="RequestVersionType" default="1.0">
+			<xs:element name="requestVersion" type="RequestVersionType" default="1.1">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A kérés/válasz verziószáma, hogy a hívó melyik interfész verzió szerint küld adatot és várja a választ</xs:documentation>
 					<xs:documentation xml:lang="en">Request version number, indicating which datastructure the client sends data in, and in which the response is expected</xs:documentation>
@@ -909,6 +921,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla feldolgozási eredmény</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice processing result</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="originalRequestVersion" type="RequestVersionType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az adatszolgáltatás requestVersion értéke</xs:documentation>
+					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>

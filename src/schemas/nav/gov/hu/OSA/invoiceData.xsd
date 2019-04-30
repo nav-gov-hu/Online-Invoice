@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceData XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v1.0 2018/06/13
+# Version: v1.1 2019/02/05
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/1.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/1.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:simpleType name="AnnulmentCodeType">
@@ -95,6 +95,7 @@
 			<xs:documentation xml:lang="en">Date type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:date">
+			<xs:minInclusive value="2010-01-01"/>
 			<xs:pattern value="\d{4}-\d{2}-\d{2}"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -629,7 +630,112 @@
 			<xs:documentation xml:lang="en">Timestamp type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:dateTime">
+			<xs:minInclusive value="2010-01-01T00:00:00Z"/>
 			<xs:pattern value="\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="UnitOfMeasureType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Mennyiség egység típus</xs:documentation>
+			<xs:documentation xml:lang="en">Unit of measure type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="PIECE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Darab</xs:documentation>
+					<xs:documentation xml:lang="en">Piece</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="KILOGRAM">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kilogramm</xs:documentation>
+					<xs:documentation xml:lang="en">Kilogram</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TON">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrikus tonna</xs:documentation>
+					<xs:documentation xml:lang="en">Metric ton</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="KWH">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kilowatt óra</xs:documentation>
+					<xs:documentation xml:lang="en">Kilowatt hour</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DAY">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Nap</xs:documentation>
+					<xs:documentation xml:lang="en">Day</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="HOUR">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Óra</xs:documentation>
+					<xs:documentation xml:lang="en">Hour</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MINUTE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Perc</xs:documentation>
+					<xs:documentation xml:lang="en">Minute</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="MONTH">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Hónap</xs:documentation>
+					<xs:documentation xml:lang="en">Month</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LITER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Liter</xs:documentation>
+					<xs:documentation xml:lang="en">Liter</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="KILOMETER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kilométer</xs:documentation>
+					<xs:documentation xml:lang="en">Kilometer</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CUBIC_METER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Köbméter</xs:documentation>
+					<xs:documentation xml:lang="en">Cubic meter</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="METER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Méter</xs:documentation>
+					<xs:documentation xml:lang="en">Meter</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LINEAR_METER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Folyóméter</xs:documentation>
+					<xs:documentation xml:lang="en">Linear meter</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CARTON">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Karton</xs:documentation>
+					<xs:documentation xml:lang="en">Carton</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="PACK">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Csomag</xs:documentation>
+					<xs:documentation xml:lang="en">Pack</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="OWN">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Saját mennyiségi egység megnevezés</xs:documentation>
+					<xs:documentation xml:lang="en">Own unit of measure</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="VatCodeType">
@@ -1042,7 +1148,7 @@
 					<xs:documentation xml:lang="en">ISO 4217 currency code on the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="exchangeRate" type="ExchangeRateType" minOccurs="0">
+			<xs:element name="exchangeRate" type="ExchangeRateType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">HUF-tól különböző pénznem esetén az alkalmazott árfolyam: egy egység értéke HUF-ban</xs:documentation>
 					<xs:documentation xml:lang="en">In case any currency is used other than HUF, the applied exchange rate should be mentioned: 1 unit of the foreign currency expressed in HUF</xs:documentation>
@@ -1380,6 +1486,12 @@
 					<xs:documentation xml:lang="en">Product codes</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="lineExpressionIndicator" type="xs:boolean" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Értéke true, ha a tétel mennyiségi egysége természetes mértékegységben kifejezhető</xs:documentation>
+					<xs:documentation xml:lang="en">The value is true if the unit of measure of the invoice item is expressible in natural unit</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="lineDescription" type="SimpleText255NotBlankType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A termék vagy szolgáltatás megnevezése</xs:documentation>
@@ -1392,10 +1504,16 @@
 					<xs:documentation xml:lang="en">Quantity</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="unitOfMeasure" type="SimpleText50NotBlankType" minOccurs="0">
+			<xs:element name="unitOfMeasure" type="UnitOfMeasureType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Mennyiségi egység</xs:documentation>
-					<xs:documentation xml:lang="en">Unit of measure</xs:documentation>
+					<xs:documentation xml:lang="hu">A számlán szereplő mennyiségi egység kanonikus kifejezése az interfész specifikáció szerint</xs:documentation>
+					<xs:documentation xml:lang="en">Canonical representation of the unit of measure of the invoice, according to the interface specification</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="unitOfMeasureOwn" type="SimpleText50NotBlankType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számlán szereplő mennyiségi egység literális kifejezése</xs:documentation>
+					<xs:documentation xml:lang="en">Literal unit of measure of the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="unitPrice" type="QuantityType" minOccurs="0">
@@ -1642,7 +1760,7 @@
 			<xs:documentation xml:lang="en">Clauses according to the Act LXXXV of 2011 on Environmental Protection Product Fee (related to the item)</xs:documentation>
 		</xs:annotation>
 		<xs:choice>
-			<xs:element name="productFeeTakeoverData" type="ProductFeeTakeoverDataType" minOccurs="0">
+			<xs:element name="productFeeTakeoverData" type="ProductFeeTakeoverDataType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A környezetvédelmi termékdíj kötelezettség átvállalásával kapcsolatos adatok</xs:documentation>
 					<xs:documentation xml:lang="en">Data in connection with takeover of environmental protection product fee</xs:documentation>
@@ -1842,7 +1960,7 @@
 			<xs:documentation xml:lang="en">Calculation of invoice totals (not simplified invoice)</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="summaryByVatRate" type="SummaryByVatRateType" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="summaryByVatRate" type="SummaryByVatRateType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Összesítés ÁFA-mérték szerint</xs:documentation>
 					<xs:documentation xml:lang="en">Calculation of invoice totals per VAT rates</xs:documentation>
