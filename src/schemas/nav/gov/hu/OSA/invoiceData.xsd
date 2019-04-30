@@ -3,27 +3,16 @@
 # Projekt: Magyar Online Számla Rendszer invoiceData XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v1.1 2019/02/05
+# Version: v2.0 2019/04/02
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/1.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/1.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:simpleType name="AnnulmentCodeType">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:simpleType name="UnboundedIndexType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Technikai érvénytelenítés típusa</xs:documentation>
-			<xs:documentation xml:lang="en">Technical annulment type</xs:documentation>
+			<xs:documentation xml:lang="hu">Sorszám típus kötegelt számlaművelethez</xs:documentation>
+			<xs:documentation xml:lang="en">Index type for batch invoice operation</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:enumeration value="ERRATIC_DATA">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Hibás adattartalom miatti technikai érvénytelenítés</xs:documentation>
-					<xs:documentation xml:lang="en">Technical annulment due to erratic data content</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
-			<xs:enumeration value="ERRATIC_INVOICE_NUMBER">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Hibás számlaszám miatti technikai érvénytelenítés</xs:documentation>
-					<xs:documentation xml:lang="en">Technical annulment due to erratic invoice number</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="BankAccountNumberType">
@@ -118,6 +107,16 @@
 			<xs:totalDigits value="14"/>
 			<xs:fractionDigits value="6"/>
 			<xs:minExclusive value="0.00"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="IndexType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Sorszám típus</xs:documentation>
+			<xs:documentation xml:lang="en">Index type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:int">
+			<xs:minInclusive value="1"/>
+			<xs:maxInclusive value="100"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="InvoiceAppearanceType">
@@ -283,9 +282,9 @@
 			<xs:documentation xml:lang="en">ZIP code type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:minLength value="4"/>
+			<xs:minLength value="3"/>
 			<xs:maxLength value="10"/>
-			<xs:pattern value="[A-Z0-9]{4,10}"/>
+			<xs:pattern value="^[A-Z0-9][A-Z0-9\s\-]{1,8}[A-Z0-9]$"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ProductCodeCategoryType">
@@ -295,7 +294,7 @@
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:minLength value="2"/>
-			<xs:maxLength value="5"/>
+			<xs:maxLength value="6"/>
 			<xs:enumeration value="VTSZ">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Vámtarifa szám VTSZ</xs:documentation>
@@ -336,6 +335,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Építményjegyzék szám</xs:documentation>
 					<xs:documentation xml:lang="en">Classification of Inventory of Construction</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TESZOR">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A Termékek és Szolgáltatások Osztályozási Rendszere (TESZOR) szerinti termékkód - 451/2008/EK rendelet</xs:documentation>
+					<xs:documentation xml:lang="en">Product code according to the TESZOR (Hungarian Classification of Goods and Services), Classification of Product by Activity, CPA - regulation 451/2008/EC</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="OWN">
@@ -508,6 +513,27 @@
 			<xs:pattern value="[0-9A-F]{64}"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="SimpleText100NotBlankType">
+		<xs:annotation>
+			<xs:documentation>Legfeljebb 100 karaktert tartalmazó szöveg típus</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100"/>
+			<xs:pattern value=".*[^\s].*"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="SimpleText1024NotBlankType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Legfeljebb 1024 karaktert tartalmazó szöveg típus</xs:documentation>
+			<xs:documentation xml:lang="en">String of maximum 1024 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="1024"/>
+			<xs:pattern value=".*[^\s].*"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="SimpleText15NotBlankType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Legfeljebb 15 karaktert tartalmazó szöveg típus</xs:documentation>
@@ -516,27 +542,6 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="15"/>
-			<xs:pattern value=".*[^\s].*"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="SimpleText50NotBlankType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Legfeljebb 50 karaktert tartalmazó szöveg típus</xs:documentation>
-			<xs:documentation xml:lang="en">String of maximum 50 characters</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1"/>
-			<xs:maxLength value="50"/>
-			<xs:pattern value=".*[^\s].*"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="SimpleText100NotBlankType">
-		<xs:annotation>
-			<xs:documentation>Legfeljebb 100 karaktert tartalmazó szöveg típus</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1"/>
-			<xs:maxLength value="100"/>
 			<xs:pattern value=".*[^\s].*"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -562,6 +567,17 @@
 			<xs:pattern value=".*[^\s].*"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:simpleType name="SimpleText50NotBlankType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Legfeljebb 50 karaktert tartalmazó szöveg típus</xs:documentation>
+			<xs:documentation xml:lang="en">String of maximum 50 characters</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="50"/>
+			<xs:pattern value=".*[^\s].*"/>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="SimpleText512NotBlankType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Legfeljebb 512 karaktert tartalmazó szöveg típus</xs:documentation>
@@ -570,17 +586,6 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="1"/>
 			<xs:maxLength value="512"/>
-			<xs:pattern value=".*[^\s].*"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="SimpleText1024NotBlankType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Legfeljebb 1024 karaktert tartalmazó szöveg típus</xs:documentation>
-			<xs:documentation xml:lang="en">String of maximum 1024 characters</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:string">
-			<xs:minLength value="1"/>
-			<xs:maxLength value="1024"/>
 			<xs:pattern value=".*[^\s].*"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -836,6 +841,26 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Repült órák száma</xs:documentation>
 					<xs:documentation xml:lang="en">Number of aviated hours</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="BatchInvoiceType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Kötegelt módosító okirat adatai</xs:documentation>
+			<xs:documentation xml:lang="en">Data of a batch of modification documents</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="batchIndex" type="UnboundedIndexType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoice" type="InvoiceType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Egy számla vagy módosító okirat adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Data of a single invoice or modification document</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1096,8 +1121,8 @@
 	</xs:complexType>
 	<xs:complexType name="InvoiceDataType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla adatok</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice data</xs:documentation>
+			<xs:documentation xml:lang="hu">A számla adatszolgáltatás adatai</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice exchange data</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="invoiceNumber" type="SimpleText50NotBlankType">
@@ -1106,19 +1131,33 @@
 					<xs:documentation xml:lang="en">Sequential number of the original invoice or modifiation document - section 169 (b) or section 170 (1) b) of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="invoiceIssueDate" type="DateType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla vagy módosító okirat kelte - ÁFA tv. 169. § a), ÁFA tv. 170. § (1) bek. a)</xs:documentation>
+					<xs:documentation xml:lang="en">Date of issue of the invoice or the modification document - section 169 (a) of the VAT law, section 170 (1) a) of the VAT law</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceMain" type="InvoiceMainType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számlaadatok leírására szolgáló közös típus</xs:documentation>
+					<xs:documentation xml:lang="hu">A common type to describe invoice information</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="InvoiceDetailType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számla részletező adatok</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice detail data</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
 			<xs:element name="invoiceCategory" type="InvoiceCategoryType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla típusa, módosító okirat esetén az eredeti számla típusa</xs:documentation>
 					<xs:documentation xml:lang="en">Type of invoice. In case of modification document the type of original invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceIssueDate" type="DateType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla kelte - ÁFA tv. 169. § a)</xs:documentation>
-					<xs:documentation xml:lang="en">Date of issue of the invoice - section 169 (a) of the VAT law</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceDeliveryDate" type="DateType" minOccurs="0">
+			<xs:element name="invoiceDeliveryDate" type="DateType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Teljesítés dátuma (ha nem szerepel a számlán, akkor azonos a számla keltével) - ÁFA tv. 169. § g)</xs:documentation>
 					<xs:documentation xml:lang="en">Delivery date (if this field does not exist on the invoice, the date of the invoice should be considered as such) - section 169 (g) of the VAT law</xs:documentation>
@@ -1222,45 +1261,33 @@
 					<xs:documentation xml:lang="en">Data related to the fiscal representative</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceData" type="InvoiceDataType">
+			<xs:element name="invoiceDetail" type="InvoiceDetailType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla adatok</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice adata</xs:documentation>
+					<xs:documentation xml:lang="hu">Számla részletező adatok</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice detail adata</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="InvoiceAnnulmentType">
+	<xs:complexType name="InvoiceMainType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Korábbi adatszolgáltatás technikai érvénytelenítésének adatai</xs:documentation>
-			<xs:documentation xml:lang="en">Data of technical annulment concerning previous data exchange</xs:documentation>
+			<xs:documentation xml:lang="hu">Számlaadatok leírására szolgáló közös típus</xs:documentation>
+			<xs:documentation xml:lang="hu">A common type to describe invoice information</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="annulmentReference" type="SimpleText50NotBlankType">
+		<xs:choice>
+			<xs:element name="invoice" type="InvoiceType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A technikai érvénytelenítéssel érintett számla vagy módosító okirat sorszáma</xs:documentation>
-					<xs:documentation xml:lang="en">Sequential number of the invoice or modification document to be annuled</xs:documentation>
+					<xs:documentation xml:lang="hu">Egy számla vagy módosító okirat adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Data of a single invoice or modification document</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="annulmentTimestamp" type="TimestampType">
+			<xs:element name="batchInvoice" type="BatchInvoiceType" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A technikai érvénytelenítés időbélyege a forrásrendszerben UTC idő szerint</xs:documentation>
-					<xs:documentation xml:lang="en">Timestamp of the technical annulment in UTC time</xs:documentation>
+					<xs:documentation xml:lang="hu">Kötegelt módosító okirat adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Data of a batch of modification documents</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="annulmentCode" type="AnnulmentCodeType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A technikai érvénytelenítés kódja</xs:documentation>
-					<xs:documentation xml:lang="en">Technical annulment code</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="annulmentReason" type="SimpleText1024NotBlankType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A technikai érvénytelenítés oka</xs:documentation>
-					<xs:documentation xml:lang="en">Technical annulment reason</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="InvoiceReferenceType">
 		<xs:annotation>
@@ -1274,36 +1301,24 @@
 					<xs:documentation xml:lang="en">Sequence number of the original invoice, on which the modification occurs - section 170 (1) c) of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="modificationIssueDate" type="DateType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Módosító okirat kelte  - ÁFA tv. 170. § (1) bek. a)</xs:documentation>
-					<xs:documentation xml:lang="en">Date of issue of the modification document - section 170 (1) a) of the VAT law</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="modificationTimestamp" type="TimestampType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A módosító okirat készítésének időbélyege a forrásrendszerben UTC időben</xs:documentation>
-					<xs:documentation xml:lang="en">Creation date timestamp of the modification document in UTC time</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="lastModificationReference" type="SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Az eredeti számla legutóbbi módosító okiratának sorszáma (ha létezik)</xs:documentation>
-					<xs:documentation xml:lang="en">Sequence number of last modification document (if exists)</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="modifyWithoutMaster" type="xs:boolean" default="false">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Annak jelzése, hogy a módosítás olyan alapszámlára hivatkozik, amelyről nem történt és nem is fog történni adatszolgáltatás</xs:documentation>
 					<xs:documentation xml:lang="en">Indicates whether the modification references to an original invoice which is not and will not be exchanged</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="modificationIndex" type="UnboundedIndexType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számlára vonatkozó módosító okirat egyedi sorszáma</xs:documentation>
+					<xs:documentation xml:lang="en">The unique sequence number referring to the original invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="InvoiceExchangeType">
+	<xs:complexType name="InvoiceType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">A számla adatszolgáltatás adatai</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice exchange data</xs:documentation>
+			<xs:documentation xml:lang="hu">Egy számla vagy módosító okirat adatai</xs:documentation>
+			<xs:documentation xml:lang="en">Data of a single invoice or modification document</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="invoiceReference" type="InvoiceReferenceType" minOccurs="0">
@@ -1338,38 +1353,26 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="InvoiceType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Az adatszolgáltatás fő típusa</xs:documentation>
-			<xs:documentation xml:lang="en">Main type of the data exchange</xs:documentation>
-		</xs:annotation>
-		<xs:choice>
-			<xs:element name="invoiceExchange" type="InvoiceExchangeType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla adatszolgáltatás adatai</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice exchange data</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceAnnulment" type="InvoiceAnnulmentType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Korábbi adatszolgáltatás technikai érvénytelenítésének adatai</xs:documentation>
-					<xs:documentation xml:lang="en">Data of technical annulment concerning previous data exchange</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:choice>
-	</xs:complexType>
 	<xs:complexType name="LineAmountsNormalType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Normál vagy gyűjtő számla esetén kitöltendő tétel érték adatok</xs:documentation>
 			<xs:documentation xml:lang="en">Item value data to be completed in case of normal or aggregate invoice</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="lineNetAmount" type="MonetaryType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Tétel nettó összege a számla pénznemében</xs:documentation>
-					<xs:documentation xml:lang="en">Net amount of the item expressed in the currency of the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
+			<xs:choice>
+				<xs:element name="lineNetAmount" type="MonetaryType">
+					<xs:annotation>
+						<xs:documentation xml:lang="hu">Tétel nettó összege a számla pénznemében</xs:documentation>
+						<xs:documentation xml:lang="en">Net amount of the item expressed in the currency of the invoice</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+				<xs:element name="lineConsideration" type="MonetaryType">
+					<xs:annotation>
+						<xs:documentation xml:lang="hu">Különbözet szerinti adózás esetében az ellenérték összege</xs:documentation>
+						<xs:documentation xml:lang="en">In case of differential tax, the amount of the consideration</xs:documentation>
+					</xs:annotation>
+				</xs:element>
+			</xs:choice>
 			<xs:element name="lineVatRate" type="VatRateType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Adómérték vagy adómentesség jelölése</xs:documentation>
@@ -1486,13 +1489,13 @@
 					<xs:documentation xml:lang="en">Product codes</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="lineExpressionIndicator" type="xs:boolean" minOccurs="0">
+			<xs:element name="lineExpressionIndicator" type="xs:boolean" default="false">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Értéke true, ha a tétel mennyiségi egysége természetes mértékegységben kifejezhető</xs:documentation>
 					<xs:documentation xml:lang="en">The value is true if the unit of measure of the invoice item is expressible in natural unit</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="lineDescription" type="SimpleText255NotBlankType" minOccurs="0">
+			<xs:element name="lineDescription" type="SimpleText512NotBlankType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A termék vagy szolgáltatás megnevezése</xs:documentation>
 					<xs:documentation xml:lang="en">Name / description of the product or service</xs:documentation>
@@ -1745,7 +1748,7 @@
 						<xs:documentation xml:lang="en">The value of (not own) product code</xs:documentation>
 					</xs:annotation>
 				</xs:element>
-				<xs:element name="productCodeOwnValue" type="SimpleText50NotBlankType">
+				<xs:element name="productCodeOwnValue" type="SimpleText255NotBlankType">
 					<xs:annotation>
 						<xs:documentation xml:lang="hu">Saját termékkód értéke</xs:documentation>
 						<xs:documentation xml:lang="en">Own product code value</xs:documentation>
@@ -2212,14 +2215,14 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:element name="Invoice">
+	<xs:element name="InvoiceData">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">XML root element, számla vagy módosítás adatait leíró típus, amelyet BASE64 kódoltan tartalmaz az invoiceApi sémaleíró invoice elementje</xs:documentation>
-			<xs:documentation xml:lang="en">XML root element, invoice or modification data type in BASE64 encoding, equivalent with the invoiceApi schema definition's invoice element</xs:documentation>
+			<xs:documentation xml:lang="hu">XML root element, számla vagy módosítás adatait leíró típus, amelyet BASE64 kódoltan tartalmaz az invoiceApi sémaleíró invoiceData elementje</xs:documentation>
+			<xs:documentation xml:lang="en">XML root element, invoice or modification data type in BASE64 encoding, equivalent with the invoiceApi schema definition's invoiceData element</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="InvoiceType"/>
+				<xs:extension base="InvoiceDataType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>

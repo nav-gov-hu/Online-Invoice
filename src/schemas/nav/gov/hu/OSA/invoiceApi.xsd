@@ -3,10 +3,42 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v1.1 2019/02/05
+# Version: v2.0 2019/04/02
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/1.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/1.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/1.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="http://schemas.nav.gov.hu/OSA/1.0/data" schemaLocation="invoiceData.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
+	<xs:simpleType name="AnnulmentVerificationStatusType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Technikai érvénytelenítő kérések jóváhagyási státusza</xs:documentation>
+			<xs:documentation xml:lang="en">Verification status of technial annulment requests</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="NOT_VERIFIABLE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés kliens hiba miatt nem hagyható jóvá</xs:documentation>
+					<xs:documentation xml:lang="en">The technical annulment is not verifiable due to client error</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="VERIFICATION_PENDING">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés jóváhagyásra vár</xs:documentation>
+					<xs:documentation xml:lang="en">The technical annulment is awaiting verification</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="VERIFICATION_DONE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés jóváhagyásra került</xs:documentation>
+					<xs:documentation xml:lang="en">The technical annulment has been verified</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="VERIFICATION_REJECTED">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés elutasításra került</xs:documentation>
+					<xs:documentation xml:lang="en">The technical annulment has been rejected</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="BusinessResultCodeType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Üzleti eredmény kód típus</xs:documentation>
@@ -78,22 +110,25 @@
 			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="IndexType">
+	<xs:simpleType name="InvoiceEntityType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Sorszám típus</xs:documentation>
-			<xs:documentation xml:lang="en">Index type</xs:documentation>
+			<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
+			<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:int">
-			<xs:minInclusive value="1"/>
-			<xs:maxInclusive value="100"/>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="SUPPLIER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla kiállító</xs:documentation>
+					<xs:documentation xml:lang="en">Supplier of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="CUSTOMER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla befogadó</xs:documentation>
+					<xs:documentation xml:lang="en">Customer of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="InvoiceType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla adatok BASE64-ben kódolt tartalma</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice data in BASE64 encoded form</xs:documentation>
-		</xs:annotation>
-		<xs:restriction base="xs:base64Binary"/>
 	</xs:simpleType>
 	<xs:simpleType name="InvoiceStatusType">
 		<xs:annotation>
@@ -111,6 +146,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Feldogozás alatt</xs:documentation>
 					<xs:documentation xml:lang="en">Processing</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SAVED">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Elmentve</xs:documentation>
+					<xs:documentation xml:lang="en">Saved</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 			<xs:enumeration value="DONE">
@@ -138,7 +179,21 @@
 			<xs:pattern value="[a-zA-Z0-9]{6,15}"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="OperationType">
+	<xs:simpleType name="ManageAnnulmentOperationType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Technikai érvénytelenítés műveleti típus</xs:documentation>
+			<xs:documentation xml:lang="en">Technical annulment operation type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="ANNUL">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Korábbi adatszolgáltatás technikai érvénytelenítése</xs:documentation>
+					<xs:documentation xml:lang="en">Technical annulment of previous exchange</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="ManageInvoiceOperationType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Számlaművelet típus</xs:documentation>
 			<xs:documentation xml:lang="en">Invoice operation type</xs:documentation>
@@ -162,12 +217,6 @@
 					<xs:documentation xml:lang="en">Exchange concerning invoice invalidation</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="ANNUL">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Korábbi adatszolgáltatás technikai érvénytelenítése</xs:documentation>
-					<xs:documentation xml:lang="en">Technical annulment of previous exchange</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PageType">
@@ -179,15 +228,42 @@
 			<xs:minInclusive value="1"/>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="RequestIdType">
+	<xs:simpleType name="QueryOperatorType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Kérés azonosító típus</xs:documentation>
-			<xs:documentation xml:lang="en">Request ID type</xs:documentation>
+			<xs:documentation xml:lang="hu">Relációs művelet típus</xs:documentation>
+			<xs:documentation xml:lang="en">Relational operator type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:maxLength value="32"/>
-			<xs:minLength value="1"/>
-			<xs:pattern value="[+a-zA-Z0-9_]{1,32}"/>
+			<xs:enumeration value="EQ">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Egyenlőség</xs:documentation>
+					<xs:documentation xml:lang="en">Equals</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="GT">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Nagyobb mint reláció</xs:documentation>
+					<xs:documentation xml:lang="en">Greater than relation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="GTE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Nagyobb vagy egyenlő reláció</xs:documentation>
+					<xs:documentation xml:lang="en">Greater or equals relation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LT">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kisebb mint reláció</xs:documentation>
+					<xs:documentation xml:lang="en">Less than relation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="LTE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kisebb vagy egyenlő reláció</xs:documentation>
+					<xs:documentation xml:lang="en">Less or equals relation</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="RequestVersionType">
@@ -196,24 +272,13 @@
 			<xs:documentation xml:lang="en">Request header type</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="1.0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Alapérték</xs:documentation>
-					<xs:documentation xml:lang="en">Default</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
-			<xs:enumeration value="1.1">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Adatminőség javítás</xs:documentation>
-					<xs:documentation xml:lang="en">Data quality improvement</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
+			<xs:enumeration value="2.0"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="Sha512HashType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Nagybetűsített SHA-512 hash értéke</xs:documentation>
-			<xs:documentation xml:lang="en">Uppercase SHA-512 hash value</xs:documentation>
+			<xs:documentation xml:lang="hu">Nagybetűsített SHA hash értéke</xs:documentation>
+			<xs:documentation xml:lang="en">Uppercase SHA hash value</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
 			<xs:length value="128"/>
@@ -308,6 +373,90 @@
 			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:complexType name="AdditionalQueryParamsType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A számla lekérdezés kiegészítő paraméterei</xs:documentation>
+			<xs:documentation xml:lang="en">Additional params of the invoice query</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="groupMemberTaxNumber" type="TaxpayerQueryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Csoport tag adószáma</xs:documentation>
+					<xs:documentation xml:lang="en">Tax number of group member</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceCategory" type="data:InvoiceCategoryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla típusa</xs:documentation>
+					<xs:documentation xml:lang="en">Type of invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="paymentMethod" type="data:PaymentMethodType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Fizetés módja</xs:documentation>
+					<xs:documentation xml:lang="en">Method of payment</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceAppearance" type="data:InvoiceAppearanceType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla megjelenési formája</xs:documentation>
+					<xs:documentation xml:lang="en">Form of appearance of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="source" type="SourceType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az adatszolgáltatás forrása</xs:documentation>
+					<xs:documentation xml:lang="en">Data exchange source</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="currency" type="data:CurrencyType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla pénzneme</xs:documentation>
+					<xs:documentation xml:lang="en">Currency of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AnnulmentOperationListType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A kéréshez tartozó kötegelt technikai érvénytelenítések</xs:documentation>
+			<xs:documentation xml:lang="en">Batch technical annulment operations of the request</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="annulmentOperation" type="AnnulmentOperationType" maxOccurs="100">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A kéréshez tartozó technikai érvénytelenítő művelet</xs:documentation>
+					<xs:documentation xml:lang="en">Technial annulment operation of the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AnnulmentOperationType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A kéréshez tartozó technikai érvénytelenítő művelet</xs:documentation>
+			<xs:documentation xml:lang="en">Technial annulment operation of the request</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="index" type="data:IndexType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés sorszáma a kérésen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the technical annulment within the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annulmentOperation" type="ManageAnnulmentOperationType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A kért technikai érvénytelenítés művelet típusa</xs:documentation>
+					<xs:documentation xml:lang="en">Type of the desired technical annulment operation</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceAnnulment" type="xs:base64Binary">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Technikai érvénytelenítés adatok BASE64-ben kódolt tartalma</xs:documentation>
+					<xs:documentation xml:lang="en">Technical annulment data in BASE64 encoded form</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AuditDataType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A számla audit adatai</xs:documentation>
@@ -338,10 +487,16 @@
 					<xs:documentation xml:lang="en">Transaction ID of the invoice if it was exchanged via M2M interface</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="index" type="IndexType" minOccurs="0">
+			<xs:element name="index" type="data:IndexType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="batchIndex" type="data:UnboundedIndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="originalRequestVersion" type="RequestVersionType">
@@ -370,7 +525,7 @@
 					<xs:documentation xml:lang="en">UTC time of the request/response</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="requestVersion" type="RequestVersionType" default="1.1">
+			<xs:element name="requestVersion" type="RequestVersionType" default="2.0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A kérés/válasz verziószáma, hogy a hívó melyik interfész verzió szerint küld adatot és várja a választ</xs:documentation>
 					<xs:documentation xml:lang="en">Request version number, indicating which datastructure the client sends data in, and in which the response is expected</xs:documentation>
@@ -402,7 +557,7 @@
 					<xs:documentation xml:lang="en">Authentication data of the request</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="software" type="SoftwareType" minOccurs="0">
+			<xs:element name="software" type="SoftwareType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram adatai</xs:documentation>
 					<xs:documentation xml:lang="en">Billing software data</xs:documentation>
@@ -511,13 +666,71 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<xs:complexType name="InvoiceDataResultType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számlaszámra történő lekérdezés eredménye</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice number based query result</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="invoiceData" type="xs:base64Binary">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla adatok BASE64-ben kódolt tartalma</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice data in BASE64 encoded form</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="auditData" type="AuditDataType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla audit adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice audit data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceReference" type="data:InvoiceReferenceType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosítás hivatkozási adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Modification reference data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="compressedContentIndicator" type="xs:boolean" default="false">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Jelöli, ha az invoice tartalmát a BASE64 dekódolást követően még ki kell tömöríteni az olvasáshoz</xs:documentation>
+					<xs:documentation xml:lang="en">Indicates if the content of the invoice needs to be decompressed to be read following the BASE64 decoding</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="InvoiceDigestListType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Kivonatos lekérdezési eredmények</xs:documentation>
 			<xs:documentation xml:lang="en">Digest query results</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="invoiceDigest" type="InvoiceDigestType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="invoiceDigest" type="InvoiceDigestType" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="InvoiceDigestResultType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számla lekérdezési eredmények</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice query results</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="currentPage" type="PageType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A jelenleg lekérdezett lapszám</xs:documentation>
+					<xs:documentation xml:lang="en">The currently queried page count</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="availablePage" type="PageType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A lekérdezés eredménye szerint elérhető utolsó lapszám</xs:documentation>
+					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="queryResult" type="InvoiceDigestListType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla lekérdezési eredmény</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice query result</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="InvoiceDigestType">
@@ -532,7 +745,7 @@
 					<xs:documentation xml:lang="en">Sequential number of the original invoice or modifiation document - section 169 (b) or section 170 (1) b) of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceOperation" type="OperationType">
+			<xs:element name="invoiceOperation" type="ManageInvoiceOperationType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számlaművelet típus</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice operation type</xs:documentation>
@@ -548,6 +761,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla kelte, vagy ha módosító okiratban nincs külön megadva, akkor a módosító okirat kiállításának dátuma</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice issue date, or if not provided explicitly in the modification document, the date of issue of the modification document</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="supplierTaxNumber" type="data:TaxpayerIdType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A kibocsátó adószáma</xs:documentation>
+					<xs:documentation xml:lang="en">The supplier's tax number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="customerTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
@@ -604,10 +823,36 @@
 					<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="index" type="IndexType" minOccurs="0">
+			<xs:element name="index" type="data:IndexType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="modificationIndex" type="data:UnboundedIndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számlára vonatkozó módosító okirat egyedi sorszáma</xs:documentation>
+					<xs:documentation xml:lang="en">The unique sequence number referring to the original invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="InvoiceNumberQueryType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számla lekérdezés számlaszám paramétere</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice number param of the Invoice query</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="invoiceNumber" type="data:SimpleText50NotBlankType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla vagy módosító okirat sorszáma </xs:documentation>
+					<xs:documentation xml:lang="en">Sequential number of the original or modifiation invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceEntity" type="InvoiceEntityType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -618,12 +863,6 @@
 			<xs:documentation xml:lang="en">Batch invoice operations of the request</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="technicalAnnulment" type="xs:boolean" default="false">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Technikai hiba miatt adatszolgáltatás érvénytelenítése</xs:documentation>
-					<xs:documentation xml:lang="en">Data exchange invalidation due to technical flaws</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="compressedContent" type="xs:boolean" default="false">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Tömörített tartalom jelzése a feldolgozási folyamat számára</xs:documentation>
@@ -644,19 +883,19 @@
 			<xs:documentation xml:lang="en">Invoice operation of the request</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="index" type="IndexType">
+			<xs:element name="index" type="data:IndexType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="operation" type="OperationType">
+			<xs:element name="invoiceOperation" type="ManageInvoiceOperationType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A kért művelet típusa</xs:documentation>
-					<xs:documentation xml:lang="en">Type of the desired operation</xs:documentation>
+					<xs:documentation xml:lang="hu">A kért számla művelet típusa</xs:documentation>
+					<xs:documentation xml:lang="en">Type of the desired invoice operation</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoice" type="InvoiceType">
+			<xs:element name="invoiceData" type="xs:base64Binary">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla adatok BASE64-ben kódolt tartalma</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice data in BASE64 encoded form</xs:documentation>
@@ -668,6 +907,38 @@
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Számla lekérdezési paraméterek</xs:documentation>
 			<xs:documentation xml:lang="en">Invoice query parameters</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="mandatoryQueryParams" type="MandatoryQueryParamsType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla lekérdezés kötelező paraméterei</xs:documentation>
+					<xs:documentation xml:lang="en">Mandatory params of the invoice query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="additionalQueryParams" type="AdditionalQueryParamsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla lekérdezés kiegészítő paraméterei</xs:documentation>
+					<xs:documentation xml:lang="en">Additional params of the invoice query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="relationalQueryParams" type="RelationalQueryParamsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla lekérdezés relációs paraméterei</xs:documentation>
+					<xs:documentation xml:lang="en">Relational params of the invoice query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="transactionQueryParams" type="TransactionQueryParamsType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla lekérdezés tranzakciós paraméterei</xs:documentation>
+					<xs:documentation xml:lang="en">Transactional params of the invoice query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="IssueDateParamType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számla kiállításának kereső paraméterei</xs:documentation>
+			<xs:documentation xml:lang="en">Query params of the invoice issue date</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
 			<xs:element name="invoiceIssueDateFrom" type="data:DateType">
@@ -682,209 +953,75 @@
 					<xs:documentation xml:lang="en">Interval end of the invoice issue date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="customerTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A vevő adószáma</xs:documentation>
-					<xs:documentation xml:lang="en">The buyer's tax number</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceCategory" type="data:InvoiceCategoryType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla típusa</xs:documentation>
-					<xs:documentation xml:lang="en">Type of invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="paymentMethod" type="data:PaymentMethodType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Fizetés módja</xs:documentation>
-					<xs:documentation xml:lang="en">Method of payment</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceAppearance" type="data:InvoiceAppearanceType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla megjelenési formája</xs:documentation>
-					<xs:documentation xml:lang="en">Form of appearance of the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="source" type="SourceType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Az adatszolgáltatás forrása</xs:documentation>
-					<xs:documentation xml:lang="en">Data exchange source</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceDeliveryGreaterThan" type="data:DateType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla teljesítési dátumának nagyobb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Greater than parameter of the invoice delivery date</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceDeliveryLessThan" type="data:DateType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla teljesítés dátumának kisebb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Less than parameter of the invocie delivery date</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="currency" type="data:CurrencyType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla pénzneme</xs:documentation>
-					<xs:documentation xml:lang="en">Currency of the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceNetAmountGreaterThan" type="data:MonetaryType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla nettó összege nagyobb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Greater than parameter of the invoice net amount</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceNetAmountLessThan" type="data:MonetaryType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla nettó összege kisebb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Less than parameter of the invoice net amount</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceVatAmountHUFGreaterThan" type="data:MonetaryType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla forint alapú ÁFA összegének nagyobb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Greater than parameter of the HUF based VAT amount of the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceVatAmountHUFLessThan" type="data:MonetaryType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla forint alapú ÁFA összegének kisebb mint paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Less than parameter of the HUF based VAT amount of the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="transactionParams" type="InvoiceQueryTransactionType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla adatszolgáltatás tranzakcionális paraméterei</xs:documentation>
-					<xs:documentation xml:lang="hu">Transactional query params of the invoice data exchange</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="InvoiceQueryResultListType">
+	<xs:complexType name="ManageAnnulmentRequestType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla lekérdezési eredmények</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice query results</xs:documentation>
+			<xs:documentation xml:lang="hu">A POST /manageAnnulment REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /manageAnnulment REST operation</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="currentPage" type="PageType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A jelenleg lekérdezett lapszám</xs:documentation>
-					<xs:documentation xml:lang="en">The currently queried page count</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="availablePage" type="PageType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A lekérdezés eredménye szerint elérhető utolsó lapszám</xs:documentation>
-					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="queryResult" type="InvoiceQueryResultType" minOccurs="0" maxOccurs="unbounded">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla lekérdezési eredmény</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice query result</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="exchangeToken" type="data:SimpleText50NotBlankType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A tranzakcióhoz kiadott egyedi és dekódolt token</xs:documentation>
+							<xs:documentation xml:lang="en">The decoded unique token issued for the current transaction</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="annulmentOperations" type="AnnulmentOperationListType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kéréshez tartozó kötegelt technikai érvénytelenítések</xs:documentation>
+							<xs:documentation xml:lang="en">Batch technical annulment operations of the request</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="InvoiceQueryResultType">
+	<xs:complexType name="ManageInvoiceRequestType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla lekérdezési eredmény</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice query result</xs:documentation>
+			<xs:documentation xml:lang="hu">A POST /manageInvoice REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /manageInvoice REST operation</xs:documentation>
 		</xs:annotation>
-		<xs:all>
-			<xs:element name="invoiceResult" type="InvoiceResultType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számlaszámra történő lekérdezés eredménye, teljes adattartalommal</xs:documentation>
-					<xs:documentation xml:lang="en">Complete content result of invoice number based query</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceDigestList" type="InvoiceDigestListType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Kivonat a paraméter szerint lekérdezett számlákra, vagy a számlaszámra hivatkozó módosításokra</xs:documentation>
-					<xs:documentation xml:lang="en">Digest content result of parameter based query, or the modifications referencing to the invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:all>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="exchangeToken" type="data:SimpleText50NotBlankType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A tranzakcióhoz kiadott egyedi és dekódolt token</xs:documentation>
+							<xs:documentation xml:lang="en">The decoded unique token issued for the current transaction</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="invoiceOperations" type="InvoiceOperationListType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kéréshez tartozó kötegelt számlaműveletek</xs:documentation>
+							<xs:documentation xml:lang="en">Batch invoice operations of the request</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="InvoiceQueryTransactionType">
+	<xs:complexType name="MandatoryQueryParamsType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla lekérdezés tranzakcionális adatai</xs:documentation>
-			<xs:documentation xml:lang="en">Transactional invoice query data</xs:documentation>
+			<xs:documentation xml:lang="hu">A számla lekérdezés kötelező paraméterei</xs:documentation>
+			<xs:documentation xml:lang="en">Mandatory params of the invoice query</xs:documentation>
 		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="transactionId" type="EntityIdType">
+		<xs:choice>
+			<xs:element name="invoiceIssueDate" type="IssueDateParamType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
-					<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
+					<xs:documentation xml:lang="hu">Számla kiállítás dátumtartomány</xs:documentation>
+					<xs:documentation xml:lang="en">Date range of the invoice issue date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="index" type="IndexType" minOccurs="0">
+			<xs:element name="originalInvoiceNumber">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
-					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
+					<xs:documentation xml:lang="hu">Az eredeti számla sorszáma, melyre a módosítás vonatkozik</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the original invoice, on which the modification occurs</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="operation" type="OperationType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számlaművelet típus</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice operation type</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="InvoiceQueryType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számla lekérdezés adatai</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice query data</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="invoiceNumber" type="data:SimpleText50NotBlankType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla vagy módosító okirat sorszáma</xs:documentation>
-					<xs:documentation xml:lang="en">Sequential number of the original or modifiation invoice</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="requestAllModification" type="xs:boolean" default="false" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Jelöli, ha a lekérdezett számla minden módosító számláját is vissza kell adni a válaszban</xs:documentation>
-					<xs:documentation xml:lang="en">Indicates if every modification of the queried invoice should be returned in the response</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
-	<xs:complexType name="InvoiceResultType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számlaszámra történő lekérdezés eredménye</xs:documentation>
-			<xs:documentation xml:lang="en">Invoice number based query result</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="invoice" type="InvoiceType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla adatok BASE64-ben kódolt tartalma</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice data in BASE64 encoded form</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="auditData" type="AuditDataType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla audit adatai</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice audit data</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="invoiceReference" type="data:InvoiceReferenceType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A módosítás hivatkozási adatai</xs:documentation>
-					<xs:documentation xml:lang="en">Modification reference data</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="compressedContentIndicator" type="xs:boolean" default="false">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Jelöli, ha az invoice tartalmát a BASE64 dekódolást követően még ki kell tömöríteni az olvasáshoz</xs:documentation>
-					<xs:documentation xml:lang="en">Indicates if the content of the invoice needs to be decompressed to be read following the BASE64 decoding</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
+		</xs:choice>
 	</xs:complexType>
 	<xs:complexType name="PointerType">
 		<xs:annotation>
@@ -910,6 +1047,12 @@
 					<xs:documentation xml:lang="en">Line reference</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="originalInvoiceNumber" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kötegelt számla művelet esetén az eredeti számla sorszáma, melyre a módosítás vonatkozik</xs:documentation>
+					<xs:documentation xml:lang="en">In case of a batch operation, the sequence number of the original invoice, on which the modification occurs</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ProcessingResultListType">
@@ -929,6 +1072,12 @@
 					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="annulmentVerificationStatus" type="AnnulmentVerificationStatusType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Technikai érvénytelenítő kérések jóváhagyási státusza</xs:documentation>
+					<xs:documentation xml:lang="en">Verification status of technial annulment requests</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="ProcessingResultType">
@@ -937,10 +1086,16 @@
 			<xs:documentation xml:lang="en">Invoice processing result</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="index" type="IndexType">
+			<xs:element name="index" type="data:IndexType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="batchIndex" type="data:UnboundedIndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="invoiceStatus" type="InvoiceStatusType">
@@ -967,10 +1122,268 @@
 					<xs:documentation xml:lang="en">Indicates if the content of the originalRequest needs to be decompressed to be read following the BASE64 decoding</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="originalRequest" type="InvoiceType" minOccurs="0">
+			<xs:element name="originalRequest" type="xs:base64Binary" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla adatok BASE64-ben kódolt tartalma</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice data in BASE64 encoded form</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceDataRequestType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceData REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /queryInvoiceData REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="invoiceQuery" type="InvoiceNumberQueryType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Számla lekérdezés számlaszám paramétere</xs:documentation>
+							<xs:documentation xml:lang="en">Invoice number param of the Invoice query</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceDataResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceData REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /queryInvoiceData REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="invoiceDataResult" type="InvoiceDataResultType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A számla lekérdezés eredménye</xs:documentation>
+							<xs:documentation xml:lang="en">Invoice data query result</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceDigestRequestType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceDigest REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /queryInvoiceDigest REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="page" type="PageType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A lekérdezni kívánt lap száma</xs:documentation>
+							<xs:documentation xml:lang="en">The queried page count</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="invoiceEntity" type="InvoiceEntityType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
+							<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="invoiceQueryParams" type="InvoiceQueryParamsType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Számla lekérdezési paraméterek</xs:documentation>
+							<xs:documentation xml:lang="en">Invoice query parameters</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceDigestResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceDigest REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /queryInvoiceDigest REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="invoiceDigestResult" type="InvoiceDigestListType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A számla kivonat lekérdezés eredményei</xs:documentation>
+							<xs:documentation xml:lang="en">Invoice digest query results</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceStatusRequestType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /queryInvoiceStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="transactionId" type="EntityIdType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
+							<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="returnOriginalRequest" type="xs:boolean" default="false" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Jelöli, ha a kliens által beküldött eredeti tartalmat is vissza kell adni a válaszban</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the original client data should also be returned in the response</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryInvoiceStatusResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /queryInvoiceStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="processingResults" type="ProcessingResultListType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kérésben szereplő számlák feldolgozási státusza</xs:documentation>
+							<xs:documentation xml:lang="en">Processing status of the invoices in the request</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QuerySystemMetricsResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /querySystemMetrics REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="metricsData" type="xs:base64Binary">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Rendszer metrika adatok BASE64-ben kódolt tartalma</xs:documentation>
+							<xs:documentation xml:lang="en">System metrics data in BASE64 encoded form</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="metricsCreatedAt" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A metrikák készítésének időpontja</xs:documentation>
+							<xs:documentation xml:lang="en">Creation date of the metrics</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryTaxpayerRequestType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTaxpayer REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /queryTaxpayer REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="taxNumber" type="data:TaxpayerIdType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A lekérdezett adózó adószáma</xs:documentation>
+							<xs:documentation xml:lang="en">Tax number of the queried taxpayer</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryTaxpayerResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTaxpayer REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /queryTaxpayer REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="taxpayerValidity" type="xs:boolean" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Jelzi, hogy a lekérdezett adózó létezik és érvényes-e</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates whether the queried taxpayer is existing and valid</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="taxpayerData" type="TaxpayerDataType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Az adózó lekérdezés válasz adatai</xs:documentation>
+							<xs:documentation xml:lang="en">Response data of the taxpayer query</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="RelationalQueryParamsType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A számla lekérdezés relációs paraméterei</xs:documentation>
+			<xs:documentation xml:lang="en">Relational params of the invoice query</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="invoiceDelivery" type="RelationQueryDateType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számla teljesítési dátumának kereső paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice delivery date</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceNetAmount" type="RelationQueryMonetaryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla nettó összege kereső paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice net amount</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceVatAmountHUF" type="RelationQueryMonetaryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla forint alapú ÁFA összegének kereső paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the HUF based VAT amount of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RelationQueryDateType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Kereső paraméter dátum értékekhez</xs:documentation>
+			<xs:documentation xml:lang="en">Query parameter for date values</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="queryOperator" type="QueryOperatorType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kereső operátor</xs:documentation>
+					<xs:documentation xml:lang="en">Query operator</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="queryValue" type="data:DateType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kereső érték</xs:documentation>
+					<xs:documentation xml:lang="en">Query value</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="RelationQueryMonetaryType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Kereső paraméter monetáris értékekhez</xs:documentation>
+			<xs:documentation xml:lang="en">Query parameter for monetary values</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="queryOperator" type="QueryOperatorType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kereső operátor</xs:documentation>
+					<xs:documentation xml:lang="en">Query operator</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="queryValue" type="data:MonetaryType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kereső érték</xs:documentation>
+					<xs:documentation xml:lang="en">Query value</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -987,31 +1400,31 @@
 					<xs:documentation xml:lang="en">Billing software ID</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="softwareName" type="data:SimpleText50NotBlankType" minOccurs="0">
+			<xs:element name="softwareName" type="data:SimpleText50NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram neve</xs:documentation>
 					<xs:documentation xml:lang="en">Billing software name</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="softwareOperation" type="SoftwareOperationType" minOccurs="0">
+			<xs:element name="softwareOperation" type="SoftwareOperationType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram működési típusa (lokális program vagy online számlázó szolgáltatás)</xs:documentation>
 					<xs:documentation xml:lang="en">Billing software operation type (local program or online billing service)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="softwareMainVersion" type="data:SimpleText15NotBlankType" minOccurs="0">
+			<xs:element name="softwareMainVersion" type="data:SimpleText15NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram főverziója</xs:documentation>
 					<xs:documentation xml:lang="en">Billing software main version</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="softwareDevName" type="data:SimpleText512NotBlankType" minOccurs="0">
+			<xs:element name="softwareDevName" type="data:SimpleText512NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram fejlesztőjének neve</xs:documentation>
 					<xs:documentation xml:lang="en">Name of the billing software's developer</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="softwareDevContact" type="data:SimpleText200NotBlankType" minOccurs="0">
+			<xs:element name="softwareDevContact" type="data:SimpleText200NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram fejlesztőjének elektronikus elérhetősége</xs:documentation>
 					<xs:documentation xml:lang="en">Electronic contact of the billing software's developer</xs:documentation>
@@ -1031,74 +1444,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="TaxpayerAddressType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Az adózó címadatai</xs:documentation>
-			<xs:documentation xml:lang="en">Address data of the taxpayer</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="countryCode" type="data:CountryCodeType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Az országkód ISO 3166 alpha-2 szabvány szerint</xs:documentation>
-					<xs:documentation xml:lang="en">ISO 3166 alpha-2 country code</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="postalCode" type="data:PostalCodeType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Irányítószám</xs:documentation>
-					<xs:documentation xml:lang="en">ZIP code</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="city" type="data:SimpleText255NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Település</xs:documentation>
-					<xs:documentation xml:lang="en">Settlement</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="streetName" type="data:SimpleText255NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Közterület neve</xs:documentation>
-					<xs:documentation xml:lang="en">Name of public place</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="publicPlaceCategory" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Közterület jellege</xs:documentation>
-					<xs:documentation xml:lang="en">Category of public place</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="number" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Házszám</xs:documentation>
-					<xs:documentation xml:lang="en">House number</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="building" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Épület</xs:documentation>
-					<xs:documentation xml:lang="en">Building</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="staircase" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Lépcsőház</xs:documentation>
-					<xs:documentation xml:lang="en">Staircase</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="floor" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Emelet</xs:documentation>
-					<xs:documentation xml:lang="en">Floor</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="door" type="data:SimpleText50NotBlankType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Ajtó</xs:documentation>
-					<xs:documentation xml:lang="en">Door number</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="TaxpayerDataType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Az adózó lekérdezés válasz adatai</xs:documentation>
@@ -1111,10 +1456,30 @@
 					<xs:documentation xml:lang="en">Name of the taxpayer</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="taxpayerAddress" type="TaxpayerAddressType" minOccurs="0">
+			<xs:element name="taxpayerAddress" type="data:DetailedAddressType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az adózó címadatai</xs:documentation>
 					<xs:documentation xml:lang="en">Address data of the taxpayer</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TaxpayerQueryType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számla lekérdezés adószám paramétere</xs:documentation>
+			<xs:documentation xml:lang="en">Tax number param of the Invoice query</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="taxNumber" type="data:TaxpayerIdType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számlán szereplő fél adószáma</xs:documentation>
+					<xs:documentation xml:lang="en">Tax number of the entity present on the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceEntity" type="InvoiceEntityType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1145,6 +1510,80 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="TokenExchangeResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /tokenExchange REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /tokenExchange REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="encodedExchangeToken" type="xs:base64Binary">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kiadott exchange token AES-128 ECB algoritmussal kódolt alakja</xs:documentation>
+							<xs:documentation xml:lang="en">The issued exchange token in AES-128 ECB encoded form</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="tokenValidityFrom" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kiadott token érvényességének kezdete</xs:documentation>
+							<xs:documentation xml:lang="en">Validity start of the issued exchange token</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="tokenValidityTo" type="xs:dateTime">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kiadott token érvényességének vége</xs:documentation>
+							<xs:documentation xml:lang="en">Validity end of the issued exchange token</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TransactionQueryParamsType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A számla lekérdezés tranzakciós paraméterei</xs:documentation>
+			<xs:documentation xml:lang="en">Transactional params of the invoice query</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="transactionId" type="EntityIdType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
+					<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="index" type="data:IndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla sorszáma a kérésen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceOperation" type="ManageInvoiceOperationType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számlaművelet típus</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice operation type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="TransactionResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /manageInvoice és a POST /manageAnnulment REST operáció közös válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Common response type of the POST /manageInvoice and the POST /manageAnnulment REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="transactionId" type="EntityIdType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kért operáció tranzakció azonosítója</xs:documentation>
+							<xs:documentation xml:lang="en">Transaction identifier of the requested operation</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
 	<xs:complexType name="UserHeaderType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A kérés authentikációs adatai</xs:documentation>
@@ -1159,8 +1598,8 @@
 			</xs:element>
 			<xs:element name="passwordHash" type="Sha512HashType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A technikai felhasználó jelszavának nagybetűsített SHA-512 hash értéke</xs:documentation>
-					<xs:documentation xml:lang="en">Uppercase SHA-512 hash value of the technical user's password</xs:documentation>
+					<xs:documentation xml:lang="hu">A technikai felhasználó jelszavának nagybetűsített SHA2-512 hash értéke</xs:documentation>
+					<xs:documentation xml:lang="en">Uppercase SHA2-512 hash value of the technical user's password</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="taxNumber" type="data:TaxpayerIdType">
@@ -1171,8 +1610,8 @@
 			</xs:element>
 			<xs:element name="requestSignature" type="Sha512HashType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A kérés aláírásának nagybetűsített SHA-512 hash értéke</xs:documentation>
-					<xs:documentation xml:lang="en">Uppercase SHA-512 hash value of the request's signature</xs:documentation>
+					<xs:documentation xml:lang="hu">A kérés aláírásának nagybetűsített SHA3-512 hash értéke</xs:documentation>
+					<xs:documentation xml:lang="en">Uppercase SHA3-512 hash value of the request's signature</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1199,6 +1638,28 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="ManageAnnulmentRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /manageAnnulment REST operáció kérésének root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Request root element of the POST /manageAnnulment REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ManageAnnulmentRequestType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ManageAnnulmentResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /manageAnnulment REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /manageAnnulment REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TransactionResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="ManageInvoiceRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A POST /manageInvoice REST operáció kérésének root elementje</xs:documentation>
@@ -1206,22 +1667,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicRequestType">
-					<xs:sequence>
-						<xs:element name="exchangeToken" type="data:SimpleText50NotBlankType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A tranzakcióhoz kiadott egyedi és dekódolt token</xs:documentation>
-								<xs:documentation xml:lang="en">The decoded unique token issued for the current transaction</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="invoiceOperations" type="InvoiceOperationListType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A kérés üzleti adatai</xs:documentation>
-								<xs:documentation xml:lang="en">Business data of the request</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="ManageInvoiceRequestType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1232,16 +1678,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicResponseType">
-					<xs:sequence>
-						<xs:element name="transactionId" type="EntityIdType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
-								<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="TransactionResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1252,30 +1689,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicRequestType">
-					<xs:sequence>
-						<xs:element name="page" type="PageType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A lekérdezni kívánt lap száma</xs:documentation>
-								<xs:documentation xml:lang="en">The queried page count</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:choice>
-							<xs:element name="invoiceQuery" type="InvoiceQueryType">
-								<xs:annotation>
-									<xs:documentation xml:lang="hu">Számla lekérdezés adatai</xs:documentation>
-									<xs:documentation xml:lang="en">Invoice query data</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-							<xs:element name="queryParams" type="InvoiceQueryParamsType">
-								<xs:annotation>
-									<xs:documentation xml:lang="hu">Számla lekérdezési paraméterek</xs:documentation>
-									<xs:documentation xml:lang="en">Invoice query parameters</xs:documentation>
-								</xs:annotation>
-							</xs:element>
-						</xs:choice>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryInvoiceDataRequestType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1286,16 +1700,29 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicResponseType">
-					<xs:sequence>
-						<xs:element name="queryResults" type="InvoiceQueryResultListType" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A lekérdezés eredményei</xs:documentation>
-								<xs:documentation xml:lang="en">Query results</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryInvoiceDataResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QueryInvoiceDigestRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceDigest REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /queryInvoiceDigest REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryInvoiceDigestRequestType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QueryInvoiceDigestResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryInvoiceDigest REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /queryInvoiceDigest REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryInvoiceDigestResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1306,22 +1733,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicRequestType">
-					<xs:sequence>
-						<xs:element name="transactionId" type="EntityIdType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
-								<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="returnOriginalRequest" type="xs:boolean" default="false" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">Jelöli, ha a kliens által beküldött eredeti tartalmat is vissza kell adni a válaszban</xs:documentation>
-								<xs:documentation xml:lang="en">Indicates if the original client data should also be returned in the response</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryInvoiceStatusRequestType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1332,16 +1744,29 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicResponseType">
-					<xs:sequence>
-						<xs:element name="processingResults" type="ProcessingResultListType" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A kérésben szereplő számlák feldolgozási státusza</xs:documentation>
-								<xs:documentation xml:lang="en">Processing status of the invoices in the request</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryInvoiceStatusResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QuerySystemMetricsRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció kérésének root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Request root element of the POST /querySystemMetrics REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="BasicRequestType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QuerySystemMetricsResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /querySystemMetrics REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QuerySystemMetricsResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1352,16 +1777,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicRequestType">
-					<xs:sequence>
-						<xs:element name="taxNumber" type="data:TaxpayerIdType">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A lekérdezett adózó adószáma</xs:documentation>
-								<xs:documentation xml:lang="en">Tax number of the queried taxpayer</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryTaxpayerRequestType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1372,22 +1788,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicResponseType">
-					<xs:sequence>
-						<xs:element name="taxpayerValidity" type="xs:boolean" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">Jelzi, hogy a lekérdezett adózó létezik és érvényes-e</xs:documentation>
-								<xs:documentation xml:lang="en">Indicates whether the queried taxpayer is existing and valid</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="taxpayerData" type="TaxpayerDataType" minOccurs="0">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">Az adózó lekérdezés válasz adatai</xs:documentation>
-								<xs:documentation xml:lang="en">Response data of the taxpayer query</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="QueryTaxpayerResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
@@ -1409,28 +1810,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="BasicResponseType">
-					<xs:sequence>
-						<xs:element name="encodedExchangeToken" type="xs:base64Binary">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A kiadott exchange token AES-128 ECB algoritmussal kódolt alakja</xs:documentation>
-								<xs:documentation xml:lang="en">The issued exchange token in AES-128 ECB encoded form</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="tokenValidityFrom" type="xs:dateTime">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A kiadott token érvényességének kezdete</xs:documentation>
-								<xs:documentation xml:lang="en">Validity start of the issued exchange token</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-						<xs:element name="tokenValidityTo" type="xs:dateTime">
-							<xs:annotation>
-								<xs:documentation xml:lang="hu">A kiadott token érvényességének vége</xs:documentation>
-								<xs:documentation xml:lang="en">Validity end of the issued exchange token</xs:documentation>
-							</xs:annotation>
-						</xs:element>
-					</xs:sequence>
-				</xs:extension>
+				<xs:extension base="TokenExchangeResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
