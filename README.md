@@ -4,13 +4,13 @@
 
 Üdvözöljük az Online Számla Rendszer publikus tárhelyén!
 
-Teszt rendszer frontend: https://onlineszamla-test.nav.gov.hu/
-Teszt rendszer API: https://api-test.onlineszamla.nav.gov.hu
-Éles rendszer frontend: https://onlineszamla.nav.gov.hu/
-Éles rendszer API: https://api.onlineszamla.nav.gov.hu
+Teszt rendszer frontend: https://onlineszamla-test.nav.gov.hu/  
+Teszt rendszer API: https://api-test.onlineszamla.nav.gov.hu  
+Éles rendszer frontend: https://onlineszamla.nav.gov.hu/  
+Éles rendszer API: https://api.onlineszamla.nav.gov.hu  
 
-Dokumentációk: https://onlineszamla.nav.gov.hu/dokumentaciok
-Fejlesztői napló: https://onlineszamla.nav.gov.hu/fejlesztoi_naplo
+Dokumentációk: https://onlineszamla.nav.gov.hu/dokumentaciok  
+Fejlesztői napló: https://onlineszamla.nav.gov.hu/fejlesztoi_naplo  
 
 ## 1) A tárhely tartalma és célja
 A tárhely csak a magyar Online Számla Rendszer számlabejelentő M2M interfészéhez kapcsolódó nyilvános, nem-funkcionális kódokat (sémaleíró, példa XML-ek) és leírásokat tartalmazza jelenleg. A tárhely célja, hogy a GitHub által nyújtott kollaborációs eszközök segítségével, a nemzetközi opensource fejlesztés irányelveit követve a számlázóprogram fejlesztők és más érintettek a jövőben történő interfész verzió változásokat véleményezhessék, követhessék, illetve észrevételeikkel, javaslataikkal hozzájárulhassanak az interfész fejlesztéséhez.
