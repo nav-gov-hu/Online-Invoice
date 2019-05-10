@@ -18,10 +18,13 @@ Az API **koncepcionális** működésére vonatozó kérdés vagy ötlet esetén
 
 Minden XSD módosításhoz készül külön CHANGELOG az adott branchen, ezt minden esetben kérjük az issue feladása előtt előzetesen tanulmányozni! Minden feladott issue-t megválaszolunk, de kérjük, hogy lehetőség szerint kerüljük a duplikációkat. Minden issue nyilvános, a kérdést és a választ is mindenki láthatja. Amennyiben az issue javaslat és annak tartalmával egyetértünk, úgy a javaslatot befogadjuk és a projekt kanban táblájára is felkerül mint feladat. A módosítást a későbbiekben új commit alatt hozzá fogjuk adni a projekthez.
 
+A projekt alatt lehetőség van az interfész dokumentáció hibáinak jelzésére is.
+
 Kérjük a tárgynak megfelelő sablon használatát az issue-k alatt kiválasztani, a következők alapján:
 
 - kérdés esetén: Kérdés-válasz / Q&A issue
 - javaslat esetén: Fejlesztési kérés / Feature request
+- dokumentációs hiba jelzése esetén: Dokumentációs hiba / Documentation error
 
 Kérjük a sablon tárgy mezőjében a [] címke utáni részt annak megfelelően kitölteni, amire az issue vonatkozik!
 
@@ -100,10 +103,13 @@ submitting an issue! We will respond to all submitted issues, but please avoid d
 the question and the response are visible to everyone. If the issue is a proposal and we agree with the content thereof, we will accept the
 proposal and list it on the project Kanban board as a task. The change will then be added to the project as a new commit.
 
+In the project it is possible to indicate the errors of the interface documentation.
+
 Please select the use of the template suitable for the subject from the issues, based on the following:
 
   - for questions: Kérdés-válasz / Q&A issue
   - for proposals: Fejlesztési kérés / Feature request
+  - for documentation errors: Dokumentációs hiba / Documentation error
 
 Please fill out the part after the [] label in the subject field of the template according to what the issue is referencing.
 
