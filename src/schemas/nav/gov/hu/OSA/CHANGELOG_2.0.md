@@ -29,11 +29,13 @@ A 2.0-ás interfész verzió bevezetésének igénye kettős. Egyrészről, a re
 > Felhívjuk a figyelmet, hogy vevő oldali számlalekérdezés az interfészen is csak akkor lehetséges, ha a vevő adószáma ki van töltve az adatszolgáltatásban. A vevői adószámot nem tartalmazó számlák nem kereshetők!
 - A paraméteres lekérdezés új operációja a /queryInvoiceDigest lesz. Mivel invoiceEntity ebben a kérésben is szerepel, ezzel egyben lehetőség van a vevő oldali számlák paraméteres lekérdezésére is. A keresőparaméterek teljesen új struktúrában adhatók meg, külön csomópontja van a kötelező, az opcionális, a relációs és a tranzakciós paramétereknek is. Az operáció válaszként csak digestet ad vissza, teljes tartalmat már sosem. Ha a listából szükség van valamely számlának a teljes tartalmára, akkor azt a /queryInvoiceData operációval le kell kérdezni.
 > Felhívjuk a figyelmet, hogy vevő oldali számlalekérdezés az interfészen is csak akkor lehetséges, ha a vevő adószáma ki van töltve az adatszolgáltatásban. A vevői adószámot nem tartalmazó számlák nem kereshetők!
-* Kötelező kereső paraméternek vagy kiállítási dátum tartományt, vagy az alapbizonylat sorszámát kell megadni. 
+* Kötelező kereső paraméternek vagy kiállítási dátum tartományt, a beszúrás (feldolgozás) dátum tartományt, vagy az alapbizonylat sorszámát kell megadni. 
 * Dátum tartomány megadása esetén a működés és a válasz az eddigieknek megfelelő, míg az alapbizonylat sorszám megadásakor az összes olyan számla kivonat visszaadásra kerül, amely az adott számlaszámra hivatkozik.
-* Az opcionális kereső paraméterek közé bekerült az ÁFA csoport tagjának adószáma, melyet szintén vevői és kiállítói oldalon is meg lehet adni.
+* Az opcionális kereső paraméterek közé bekerült az ÁFA csoport tagjának adószáma és az adózó neve, melyet szintén vevői és kiállítói oldalon is meg lehet adni.
 * A relációs kereső paraméterek listaszerűen tartalmazzák a korábban kisebb-mint, nagyobb-mint relációkban kereshető értékeket. Az újdonság, hogy a keresett érték mellett egy ötös listából lehet kiválasztani a relációs operátort. (egyenlő, kisebb, nagyobb, kisebb-mint, nagyobb-mint) A jelenlegi struktúra a jövőbeni bővítéseket is sokkal egyszerűbbé teszi.
+* A relációs kereső paraméterek közé bekerül a fizetési határidő.
 * A tranzakciós kereső paraméterekben az átrendezésen kívül csak annyi a változás, hogy összhangban a /manageInvoice operációban kieső ANNUL értékre, keresőparaméternek itt is csak a CREATE, MODIFY, STORNO értékek adhatók már meg.
+* A digest lekérdezés lapozása 10 tételről 100 tételre változik.
 - A /queryInvoiceStatus válasza opcionálisan visszaad egy annulmentVerificationStatus taget, amely a technikai érvénytelenítés jóváhagyási státuszait tartalmazza, ha a kérésben megadott transactionId egy technikai érvénytelenítést tartalmazó tranzakcióra mutat.
 - A /queryInvoiceStatus operációban visszaadott invoiceStatus tag értékkészlete új elemmel, a SAVED értékkel bővült. A SAVED státusz sorrendben a PROCESSING és a DONE között áll, ekkor a tranzakció feldolgozása még nem fejeződött be, de az adott indexen lévő számla már elmentésre került, tehát az adatai lekérdezhetők, a rá módosító vagy stornó adatszolgáltatás már küldhető.
 > Felhívjuk a figyelmet, hogy a SAVED státusz visszaadása nem egyenlő azzal, hogy az adatszolgáltatási kötelezettség teljesült, ezt továbbra is kizárólag a DONE státusz jelzi! Ezért a feldolgozás státusz lekérdezést egészen addig folytatni kell, amíg a tranzakció alatt minden tétel DONE vagy ABORTED nem lesz!
@@ -47,9 +49,11 @@ A 2.0-ás interfész verzió bevezetésének igénye kettős. Egyrészről, a re
 > Egyelőre nem látjuk indokoltnak, hogy bevezessünk 2 új operációt erre az esetre, (pl: BATCH_MODIFY és BATCH_STORNO) de ez a jövőben még változhat.
 * A kötegelt módosítás feldolgozására vonatkozó hibaüzenetek könnyebb keresése miatt a /queryInvoiceStatus válaszában visszaadásra kerül az index mellett a batchIndex is, továbbá a pointerekbe mindenhol bekerül a hivatkozott számla száma, az originalInvoiceNumber is.
 * A kötegelt módosítás feldolgozása a technikai érvénytelenítés szabályai szerint fog történni, azaz amennyiben bármely batchIndex alatti tétel ERROR miatt elbukik, úgy az egész adatszolgáltatás is el fog bukni az ellenőrzésen.
+- Az adózó lekérdezésre használt /queryTaxpayer operáció visszaadja a lekérdezett adózó ÁFA csoport tagságát, valamint séma szinten tartalmazza az adózó rövid nevét.
 - Az API-ban új operációként megjelenik egy /querySystemMetrics operáció. A szolgáltatáshoz alap authentikációt kell végezni, mint a token kérésnél. Siker esetén a rendszer visszaadja a rendszer aktuális állapotára vonatkozó metrikákat. 
 * A kliens oldali lekérdezések gyakorisága alkalmazás oldalon korlátozva lesz. Ennek kialakításánál a metrika visszaadás költsége is szempont lesz, így ennek hiányában pontos értéket még nem tudunk mondani.
 > Az operáció válasza egyelőre base64Binary, amint látjuk pontosan mi lesz benne, adunk ki külön XSD-t a tartalomhoz. Ez nem feltétlenül lesz a 2.0 része időben, de szeretnénk megteremteni már most a lehetőséget rá a sémában.
+- Az API-ban új operációként megjelenik egy /queryInvoiceCheck operáció. A szolgáltatáshoz alap authentikációt kell végezni, mint a token kérésnél. Siker esetén a rendszer visszaadja, hogy a lekérdetett számlaszám létezik-e érvényesként a rendszerben, feltéve, hogy a lekérdezést végző adózó szerepel a számlán kiállítóként vagy vevőként.
 
 ### 1.3) A requestSignature számítása a 2.0 verziótól 
 A requestSignature értékét a 2.0 verziótól minden operációban SHA2-512 helyett SHA3-512 függvénynel kell számolni. 
@@ -86,6 +90,7 @@ A felsorolt főbb problémákon felül több adózói igény is érkezett egyes 
 - InvoiceQueryParamsType típusból az adószám paraméter törlése
 - InvoiceQueryResultType típus törlése
 - TaxpayerAddressType törlésre került, az adószám lekérdező válasza a data:DetailedAddressType típust használja a címadatokhoz
+- A beszúrás időpontja data:TimestampType típusra változott és UTC időre kerül konvertálásra a válaszban
 
 ### 2.2) DATA sémaleíró
 
@@ -98,7 +103,31 @@ A felsorolt főbb problémákon felül több adózói igény is érkezett egyes 
 - invoiceDeliveryDate kötelező, a MANDATORY_CONTENT_MISSING ellenőrzés 2.0-nál törölhető
 - InvoiceDataType átnevezése -> InvoiceDetailType
 - IndexType kikerült az API-ból és a Data része lett
-- árrés adózáshoz új tag került meghatározásra lineConsideration néven, ez a számlasorban szereplő nettő értékkel (lineNetAmount) choice-ban áll
+- LineNumberType típusban korlátozásra került a megadható hossz 20 helyiértékre
+- QuantityType típus kiterjesztésre került 6-ról 10 tizedes jegyre
+- ExchangeRateType típus minimum értéke 0.00-ról 0-ra változott
+- TimestampType típusban opcionálissá vált a tört másodperc
+- az árrés adózáshoz a sémában fogalmilag összevonásra kerül az ellenérték és a nettó érték
+
+### 3) ÁFA analitika előkészítés
+
+A megfelelő bázis időszaki adatok előállításához a 3.0-ás interfész előtt már szükség van arra, ha a bejövő számlaadatok tartalmazzanak alap ÁFA analitikához szükséges információkat is.
+
+Ennek jegyében a számlasorokba új, kötelező minősítő tag került, a neve lineNatureIndicator. A tag értékkészlete alapján az egyes számlasorokban szereplő tételeket minősíteni kell a szerint, hogy a tétel termékértékesítésnek, szolgáltatás nyújtásnak, termékértékesítéshez kapcsolódó szolgáltatásnak, szolgáltatáshoz kapcsolódó termékértékesítésnek minősül-e.
+
+Ezen felül, minden QuantityType és MonetaryType típusú elemben, az érték kifejezhető volt a számla pénznemében és forintban is, a nevezett elemek kiegészítésre kerültek a megfelelő párjukkal, az alábbiak szerint:
+
+- egységár forintban (line/unitPriceHUF)
+- tétel nettó összege forintban (invoiceLines/line/lineAmountsNormal/lineNetAmountData/lineNetAmountHUF)
+- tétel bruttó összege forintban (invoiceLines/line/lineAmountsNormal/lineGrossAmountData/lineGrossAmountNormalHUF)
+- tétel bruttó összege forintban (invoiceLines/line/lineAmountsSimplified/lineGrossAmountSimplifiedHUF)
+- számla bruttó összege forintban (invoiceSummary/summaryGrossData/invoiceGrossAmountHUF)
+- számla nettó összege forintban (invoiceSummary/summaryNormal/invoiceNetAmountHUF)
+- számla adótartalom bruttó összege forintban (invoiceSummary/summarySimplified/vatContentGrossAmountHUF)
+- adómérték nettó összege forintban (invoiceSummary/summaryNormal/summaryByVatRate/vatRateNetData/vatRateNetAmountHUF)
+- adómérték bruttó összege forintban (invoiceSummary/summaryNormal/summaryByVatRate/vatRateGrossData/vatRateGrossAmountHUF)
+
+Az elemek kötelezősége öröklődik a sémában már korábban definiált párjukból.
 
 --------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -133,10 +162,12 @@ functionality and refactorations. As this is a major version and it involves bre
 > Please note that the interface will also only allow customer-side invoice queries if the customer’s tax number is filled out in the data exchange. Invoices without customer tax numbers cannot be queried!
 - There will be a new operation for parametric queries, /queryInvoiceDigest. As this request also includes invoiceEntity, it will also be possible to perform a customer-side parametric query of the invoices. Search parameters can be structured completely differently. Mandatory, optional, relational and transactional parameters will all have different nodes. The operation will only provide a digest as a response, never the full content any more. If you need the full content for one of the invoices from the list, you can use the /queryInvoiceData operation to query it.
 > Please note that the interface will also only allow customer-side invoice queries if the customer’s tax number is filled out in the data exchange. Invoices without customer tax numbers cannot be queried!
-- You must provide either an issue date range or the invoice number of the base document as a mandatory search parameter.
+- You must provide either an issue or insert date range or the invoice number of the base document as a mandatory search parameter.
 - When providing an issue data range, both the operation and the response will work the same way as they have before, whereas when providing the invoice number of the base document, all invoices referencing the provided invoice number will be returned.
-- The optional search parameters now include the tax number for the VAT group member, which can also be entered either as a customer or as an issuer.
+- The optional search parameters now include the tax number for the VAT group member and the name of the taxpayer, which can also be entered either as a customer or as an issuer.
 - The relational search parameters will now list the search values that could be searched previously in smaller-than and greater-than relations. What is new is that you can now select a relational operator from a list of five, in addition to the value searched (equal, smaller, greater, smaller-than, greater-than.) The current structure also makes future extensions much simpler.
+- Relational query for invoice payment date is now possible.
+- The paging parameter of the digest query is increased from 10 to 100 items.
 - In addition to the reorganisation, the only change made to the transactional search parameters is that much like the way the ANNUL value was removed from the /manageInvoice operation, only the CREATE, MODIFY, STORNO values can now be provided as search parameters here as well.
 - The response for /queryInvoiceStatus can optionally include an annulmentVerificationStatus tag containing the approval status of the technical annulment, as long as the transactionId provided in the request references a transaction containing a technical annulment.
 - The invoiceStatus tag value set returned in the /queryInvoiceStatus operation now has a new element, the value SAVED. The SAVED status is sequentially between PROCESSING and DONE, when the processing of the transaction is not yet completed, but the invoice for the index provided has already been saved, meaning that its data can be queried, and it is ready for data exchange modifying or cancelling it.
@@ -151,9 +182,11 @@ functionality and refactorations. As this is a major version and it involves bre
 > We do not currently see a justification for introducing 2 new operations to handle these cases (e.g. BATCH_MODIFY and BATCH_STORNO), but this could change in the future.
 - To allow for searching batch processing error messages more easily, the response to /queryInvoiceStatus will return both index and batchIndex. In addition, all of the pointers will also include the referenced invoice number, originalInvoiceNumber.
 - Batch modifications will be processed according to the rules of technical annulment, i.e. if any batchIndex item fails due to an ERROR, the entire data exchange will fail verification.
+- The /queryTaxpayer operation used for taxpayer query now will return the VAT group membership of the taxpayer, and now contains the shortened name on schema level.
 - The API will include a new operation, /querySystemMetrics. Using the service will require basic authentication, much like in the case of token requests. If successful, the system will return the metrics for the current status of the system.
 - The frequency of client-side queries will be restricted on the application side. When designing this function, the cost of returning metrics will also be an aspect, therefore we cannot provide an precise value yet in the absence thereof.
 > The response of the operation is currently base64Binary, and we will provide a separate XSD for the content as soon as we know exactly what will be included in it. This functionality will not necessarily be ready in time to make it into Version 2.0, but we would already like to create an option in the schema for it.
+- The API will include a new operation, /queryInvoiceCheck. Using the service will require basic authentication, much like in the case of token requests. If successful, the system will return the fact of existence of the invoice, provided the invoice is valid and the tax number of the querying entity is present on the invoice as supplier or customer.
 
 ### 1.3) The calculation of requestSignature, as of Version 2.0
 
@@ -199,6 +232,7 @@ changes in detail, simply DIFF Version 2.0 and Version 1.1 in the pull request.
 - the tax number parameter was deleted from InvoiceQueryParamsType
 - InvoiceQueryResultType was deleted
 - TaxpayerAddressType was deleted, the response to tax number queries will use data:DetailedAddressType for address data (if the tagged address cannot be returned due to the requirements described by the response, we will fill out the missing tags with a uniform signifier defined in the specification, e.g. N/A)
+- insert date is now changed to data:TimestampType and the value is converted to UTC time in the response
 
 ### 2.2) DATA schema definition
 
@@ -211,4 +245,28 @@ changes in detail, simply DIFF Version 2.0 and Version 1.1 in the pull request.
 - invoiceDeliveryDate tag is mandatory, the MANDATORY_CONTENT_MISSING verification can be deleted in Version 2.0
 - InvoiceDataType renamed -> InvoiceDetailType
 - IndexType was removed from the API, and is now a part of Data
-- a new tag, lineConsideration was defined for use with differential taxation, included as a choice using its net value listed in the invoice line (lineNetAmount)
+- LineNumberType is now restricted to 20 digits length
+- QuantityType is extended from 6 to 10 fracture digits
+- ExchangeRateType lower bound is changed from 0.00 to 0
+- Fraction seconds in TimestampType are now optional
+- For margin scheme taxation, consideration and net amount is now treated as identical notions in the schema
+
+### 3) VAT analytics preparation
+
+In order to have adequate base interval data it is necessary to have the incoming data to carry basic VAT analytics related data even before interface version 3.0.  
+
+In light of this endeavour, line data has been supplemented with a new mandatory qualifier tag named lineNatureIndicator. Based on its values, all lines need to be classified whether they are supply of goods, supply of services, ancillary services related to supply of goods or ancillary goods related to supply of services.
+
+Furthermore, every QuantityType és MonetaryType element - where it is possible to express the value in the currency of the invoice or in HUF - have been supplemented with their corresponding pair as follows:
+
+- unit price in HUF (line/unitPriceHUF)
+- line net amount in HUF (invoiceLines/line/lineAmountsNormal/lineNetAmountData/lineNetAmountHUF)
+- line gross amount in HUF (invoiceLines/line/lineAmountsNormal/lineGrossAmountData/lineGrossAmountNormalHUF)
+- line gross amount in HUF (invoiceLines/line/lineAmountsSimplified/lineGrossAmountSimplifiedHUF)
+- summary gross amount in HUF (invoiceSummary/summaryGrossData/invoiceGrossAmountHUF)
+- summary net amount in HUF (invoiceSummary/summaryNormal/invoiceNetAmountHUF)
+- gross content summary in HUF (invoiceSummary/summarySimplified/vatContentGrossAmountHUF)
+- VAT rate net amount in HUF (invoiceSummary/summaryNormal/summaryByVatRate/vatRateNetData/vatRateNetAmountHUF)
+- VAT rate gross amount in HUF (invoiceSummary/summaryNormal/summaryByVatRate/vatRateGrossData/vatRateGrossAmountHUF)
+
+Cardinality of the new elements is inherited from their pair previously defined in the schema.
