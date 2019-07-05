@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/06/19
+# Version: v2.0 2019/07/03
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
@@ -110,22 +110,22 @@
 			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
-	<xs:simpleType name="InvoiceEntityType">
+	<xs:simpleType name="InvoiceDirectionType">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
-			<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
+			<xs:documentation xml:lang="hu">Kimenő vagy bejövő számla keresési paramétere</xs:documentation>
+			<xs:documentation xml:lang="en">Inbound or outbound invoice query parameter</xs:documentation>
 		</xs:annotation>
 		<xs:restriction base="xs:string">
-			<xs:enumeration value="SUPPLIER">
+			<xs:enumeration value="INBOUND">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla kiállító</xs:documentation>
-					<xs:documentation xml:lang="en">Supplier of the invoice</xs:documentation>
+					<xs:documentation xml:lang="hu">Bejövő (vevő oldali) számla keresési paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Inbound (customer side) invoice query parameter</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="CUSTOMER">
+			<xs:enumeration value="OUTBOUND">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla befogadó</xs:documentation>
-					<xs:documentation xml:lang="en">Customer of the invoice</xs:documentation>
+					<xs:documentation xml:lang="hu">Kimenő (kiállító oldali) számla keresési paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Outbound (supplier side) invoice query parameter</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -392,14 +392,14 @@
 		<xs:sequence>
 			<xs:element name="groupMemberTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Csoport tag adószáma</xs:documentation>
-					<xs:documentation xml:lang="en">Tax number of group member</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla kiállítójának vagy vevőjének csoport tag adószáma (a keresési feltétel az invoiceDirection tag értékétől függ)</xs:documentation>
+					<xs:documentation xml:lang="en">Tax number of group member of the supplier or the customer of the invoice (the search criteria depends on the value of the invoiceDirection tag)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="name" type="QueryNameType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla kiállítójának vagy vevőjének keresőparamétere szó eleji egyezőségre</xs:documentation>
-					<xs:documentation xml:lang="en">Query param of the supplier or the customer of the invoice for leading match pattern</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla kiállítójának vagy vevőjének keresőparamétere szó eleji egyezőségre (a keresési feltétel az invoiceDirection tag értékétől függ)</xs:documentation>
+					<xs:documentation xml:lang="en">Query param of the supplier or the customer of the invoice for leading match pattern (the search criteria depends on the value of the invoiceDirection tag)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="invoiceCategory" type="data:InvoiceCategoryType" minOccurs="0">
@@ -722,12 +722,6 @@
 					<xs:documentation xml:lang="en">Invoice audit data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceReference" type="data:InvoiceReferenceType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">A módosítás hivatkozási adatai</xs:documentation>
-					<xs:documentation xml:lang="en">Modification reference data</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="compressedContentIndicator" type="xs:boolean" default="false">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Jelöli, ha az invoice tartalmát a BASE64 dekódolást követően még ki kell tömöríteni az olvasáshoz</xs:documentation>
@@ -783,6 +777,12 @@
 					<xs:documentation xml:lang="en">Sequential number of the original invoice or modifiation document - section 169 (b) or section 170 (1) b) of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="batchIndex" type="data:UnboundedIndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="invoiceOperation" type="ManageInvoiceOperationType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számlaművelet típus</xs:documentation>
@@ -807,10 +807,34 @@
 					<xs:documentation xml:lang="en">The supplier's tax number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="supplierGroupTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A kibocsátó adószáma</xs:documentation>
+					<xs:documentation xml:lang="en">The supplier's tax number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="supplierName" type="data:SimpleText512NotBlankType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az eladó (szállító) neve</xs:documentation>
+					<xs:documentation xml:lang="en">Name of the seller (supplier)</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="customerTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A vevő adószáma</xs:documentation>
 					<xs:documentation xml:lang="en">The buyer's tax number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="customerGroupTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A vevő adószáma</xs:documentation>
+					<xs:documentation xml:lang="en">The buyer's tax number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="customerName" type="data:SimpleText512NotBlankType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A vevő neve</xs:documentation>
+					<xs:documentation xml:lang="en">Name of the customer</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="paymentMethod" type="data:PaymentMethodType" minOccurs="0">
@@ -851,14 +875,26 @@
 			</xs:element>
 			<xs:element name="invoiceNetAmount" type="data:MonetaryType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla nettó összege</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice net amount</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla nettó összege a számla pénznemében</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice net amount expressed in the currency of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceNetAmountHUF" type="data:MonetaryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla nettó összege forintban</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice net amount expressed in HUF</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceVatAmount" type="data:MonetaryType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla ÁFA összege a számla pénznemében</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice VAT amount expressed in the currency of the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="invoiceVatAmountHUF" type="data:MonetaryType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla forint alapú ÁFA összege</xs:documentation>
-					<xs:documentation xml:lang="en">The HUF based VAT amount of the invoice</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla ÁFA összege forintban</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice VAT amount expressed in HUF</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="transactionId" type="EntityIdType" minOccurs="0">
@@ -899,10 +935,16 @@
 					<xs:documentation xml:lang="en">Sequential number of the original or modifiation invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceEntity" type="InvoiceEntityType">
+			<xs:element name="invoiceDirection" type="InvoiceDirectionType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
+					<xs:documentation xml:lang="hu">Kimenő vagy bejövő számla keresési paramétere</xs:documentation>
+					<xs:documentation xml:lang="en">Inbound or outbound invoice query parameter</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="batchIndex" type="data:UnboundedIndexType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1235,10 +1277,10 @@
 							<xs:documentation xml:lang="en">The queried page count</xs:documentation>
 						</xs:annotation>
 					</xs:element>
-					<xs:element name="invoiceEntity" type="InvoiceEntityType">
+					<xs:element name="invoiceDirection" type="InvoiceDirectionType">
 						<xs:annotation>
-							<xs:documentation xml:lang="hu">Számlán szereplő fél keresési paramétere</xs:documentation>
-							<xs:documentation xml:lang="en">Query parameter of the entity present on the invoice</xs:documentation>
+							<xs:documentation xml:lang="hu">Kimenő vagy bejövő számla keresési paramétere</xs:documentation>
+							<xs:documentation xml:lang="en">Inbound or outbound invoice query parameter</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="invoiceQueryParams" type="InvoiceQueryParamsType">
@@ -1383,28 +1425,40 @@
 			<xs:documentation xml:lang="en">Relational params of the invoice query</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="invoiceDelivery" type="RelationQueryDateType" minOccurs="0">
+			<xs:element name="invoiceDelivery" type="RelationQueryDateType" minOccurs="0" maxOccurs="2">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla teljesítési dátumának kereső paramétere</xs:documentation>
 					<xs:documentation xml:lang="en">Query parameter of the invoice delivery date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="paymentDate" type="RelationQueryDateType" minOccurs="0">
+			<xs:element name="paymentDate" type="RelationQueryDateType" minOccurs="0" maxOccurs="2">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számla fizetési határidejének kereső paramétere</xs:documentation>
 					<xs:documentation xml:lang="en">Query parameter of the invoice payment date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceNetAmount" type="RelationQueryMonetaryType" minOccurs="0">
+			<xs:element name="invoiceNetAmount" type="RelationQueryMonetaryType" minOccurs="0" maxOccurs="2">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla nettó összege kereső paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Query parameter of the invoice net amount</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla nettó összeg kereső paramétere a számla pénznemében</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice net amount expressed in the currency of the invoice</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceVatAmountHUF" type="RelationQueryMonetaryType" minOccurs="0">
+			<xs:element name="invoiceNetAmountHUF" type="RelationQueryMonetaryType" minOccurs="0" maxOccurs="2">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A számla forint alapú ÁFA összegének kereső paramétere</xs:documentation>
-					<xs:documentation xml:lang="en">Query parameter of the HUF based VAT amount of the invoice</xs:documentation>
+					<xs:documentation xml:lang="hu">A számla nettó összegének kereső paramétere forintban</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice net amount expressed in HUF</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceVatAmount" type="RelationQueryMonetaryType" minOccurs="0" maxOccurs="2">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla ÁFA összegének kereső paramétere a számla pénznemében</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice VAT amount expressed in the currency of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="invoiceVatAmountHUF" type="RelationQueryMonetaryType" minOccurs="0" maxOccurs="2">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A számla ÁFA összegének kereső paramétere forintban</xs:documentation>
+					<xs:documentation xml:lang="en">Query parameter of the invoice VAT amount expressed in HUF</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
