@@ -92,6 +92,7 @@ A felsorolt főbb problémákon felül több adózói igény is érkezett egyes 
 - TaxpayerAddressType törlésre került, az adószám lekérdező válasza a data:DetailedAddressType típust használja a címadatokhoz
 - A beszúrás időpontja data:TimestampType típusra változott és UTC időre kerül konvertálásra a válaszban
 - batchIndex opcionálisan megadható az egyes számla lekérdezésekben
+- névkonvenció miatt a korábbi /queryInvoiceStatus operáció átnevezésre került /queryTransactionStatus operációra
 
 ### 2.2) DATA sémaleíró
 
@@ -235,6 +236,7 @@ changes in detail, simply DIFF Version 2.0 and Version 1.1 in the pull request.
 - TaxpayerAddressType was deleted, the response to tax number queries will use data:DetailedAddressType for address data (if the tagged address cannot be returned due to the requirements described by the response, we will fill out the missing tags with a uniform signifier defined in the specification, e.g. N/A)
 - insert date is now changed to data:TimestampType and the value is converted to UTC time in the response
 - batchIndex may be optionaly provided in single invoice queries
+- the previous /queryInvoiceStatus operation is now renamed to /queryTransactionStatus operation due to naming convention
 
 ### 2.2) DATA schema definition
 

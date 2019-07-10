@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/07/03
+# Version: v2.0 2019/07/08
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
@@ -217,6 +217,17 @@
 					<xs:documentation xml:lang="en">Exchange concerning invoice invalidation</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="OriginalRequestVersionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A lekérdezett számla requestVersion értéke</xs:documentation>
+			<xs:documentation xml:lang="en">Request version value of the queried invoice</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="1.0"/>
+			<xs:enumeration value="1.1"/>
+			<xs:enumeration value="2.0"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="PageType">
@@ -516,7 +527,7 @@
 					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="originalRequestVersion" type="RequestVersionType">
+			<xs:element name="originalRequestVersion" type="OriginalRequestVersionType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az adatszolgáltatás requestVersion értéke</xs:documentation>
 					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
@@ -730,15 +741,6 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="InvoiceDigestListType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">Kivonatos lekérdezési eredmények</xs:documentation>
-			<xs:documentation xml:lang="en">Digest query results</xs:documentation>
-		</xs:annotation>
-		<xs:sequence>
-			<xs:element name="invoiceDigest" type="InvoiceDigestType" maxOccurs="unbounded"/>
-		</xs:sequence>
-	</xs:complexType>
 	<xs:complexType name="InvoiceDigestResultType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Számla lekérdezési eredmények</xs:documentation>
@@ -757,10 +759,10 @@
 					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="queryResult" type="InvoiceDigestListType" minOccurs="0" maxOccurs="unbounded">
+			<xs:element name="invoiceDigest" type="InvoiceDigestType" maxOccurs="unbounded">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla lekérdezési eredmény</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice query result</xs:documentation>
+					<xs:documentation xml:lang="hu">Számla kivonat lekérdezési eredmény</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice digest query result</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1145,7 +1147,7 @@
 					<xs:documentation xml:lang="en">Invoice processing result</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="originalRequestVersion" type="RequestVersionType">
+			<xs:element name="originalRequestVersion" type="OriginalRequestVersionType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az adatszolgáltatás requestVersion értéke</xs:documentation>
 					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
@@ -1301,52 +1303,10 @@
 		<xs:complexContent>
 			<xs:extension base="BasicResponseType">
 				<xs:sequence>
-					<xs:element name="invoiceDigestResult" type="InvoiceDigestListType" minOccurs="0">
+					<xs:element name="invoiceDigestResult" type="InvoiceDigestResultType" minOccurs="0">
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A számla kivonat lekérdezés eredményei</xs:documentation>
 							<xs:documentation xml:lang="en">Invoice digest query results</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="QueryInvoiceStatusRequestType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció kérés típusa</xs:documentation>
-			<xs:documentation xml:lang="en">Request type of the POST /queryInvoiceStatus REST operation</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BasicRequestType">
-				<xs:sequence>
-					<xs:element name="transactionId" type="EntityIdType">
-						<xs:annotation>
-							<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
-							<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-					<xs:element name="returnOriginalRequest" type="xs:boolean" default="false" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation xml:lang="hu">Jelöli, ha a kliens által beküldött eredeti tartalmat is vissza kell adni a válaszban</xs:documentation>
-							<xs:documentation xml:lang="en">Indicates if the original client data should also be returned in the response</xs:documentation>
-						</xs:annotation>
-					</xs:element>
-				</xs:sequence>
-			</xs:extension>
-		</xs:complexContent>
-	</xs:complexType>
-	<xs:complexType name="QueryInvoiceStatusResponseType">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció válasz típusa</xs:documentation>
-			<xs:documentation xml:lang="en">Response type of the POST /queryInvoiceStatus REST operation</xs:documentation>
-		</xs:annotation>
-		<xs:complexContent>
-			<xs:extension base="BasicResponseType">
-				<xs:sequence>
-					<xs:element name="processingResults" type="ProcessingResultListType" minOccurs="0">
-						<xs:annotation>
-							<xs:documentation xml:lang="hu">A kérésben szereplő számlák feldolgozási státusza</xs:documentation>
-							<xs:documentation xml:lang="en">Processing status of the invoices in the request</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
@@ -1413,6 +1373,48 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">Az adózó lekérdezés válasz adatai</xs:documentation>
 							<xs:documentation xml:lang="en">Response data of the taxpayer query</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryTransactionStatusRequestType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTransactionStatus REST operáció kérés típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Request type of the POST /queryTransactionStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicRequestType">
+				<xs:sequence>
+					<xs:element name="transactionId" type="EntityIdType">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Az adatszolgátatás tranzakció azonosítója</xs:documentation>
+							<xs:documentation xml:lang="en">Transaction identifier of the data exchange</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="returnOriginalRequest" type="xs:boolean" default="false" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">Jelöli, ha a kliens által beküldött eredeti tartalmat is vissza kell adni a válaszban</xs:documentation>
+							<xs:documentation xml:lang="en">Indicates if the original client data should also be returned in the response</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="QueryTransactionStatusResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTransactionStatus REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the POST /queryTransactionStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexContent>
+			<xs:extension base="BasicResponseType">
+				<xs:sequence>
+					<xs:element name="processingResults" type="ProcessingResultListType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kérésben szereplő számlák feldolgozási státusza</xs:documentation>
+							<xs:documentation xml:lang="en">Processing status of the invoices in the request</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
@@ -1855,28 +1857,6 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="QueryInvoiceStatusRequest">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció kérésének root elementje</xs:documentation>
-			<xs:documentation xml:lang="en">Request root element of the POST /queryInvoiceStatus REST operation</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="QueryInvoiceStatusRequestType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
-	<xs:element name="QueryInvoiceStatusResponse">
-		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /queryInvoiceStatus REST operáció válaszának root elementje</xs:documentation>
-			<xs:documentation xml:lang="en">Response root element of the POST /queryInvoiceStatus REST operation</xs:documentation>
-		</xs:annotation>
-		<xs:complexType>
-			<xs:complexContent>
-				<xs:extension base="QueryInvoiceStatusResponseType"/>
-			</xs:complexContent>
-		</xs:complexType>
-	</xs:element>
 	<xs:element name="QuerySystemMetricsRequest">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció kérésének root elementje</xs:documentation>
@@ -1918,6 +1898,28 @@
 		<xs:complexType>
 			<xs:complexContent>
 				<xs:extension base="QueryTaxpayerResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QueryTransactionStatusRequest">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTransactionStatus REST operáció kérésének root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Request root element of the POST /queryTransactionStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryTransactionStatusRequestType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QueryTransactionStatusResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A POST /queryTransactionStatus REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /queryTransactionStatus REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryTransactionStatusResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
