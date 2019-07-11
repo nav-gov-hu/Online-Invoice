@@ -759,7 +759,7 @@
 					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="invoiceDigest" type="InvoiceDigestType" maxOccurs="unbounded">
+			<xs:element name="invoiceDigest" type="InvoiceDigestType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla kivonat lekérdezési eredmény</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice digest query result</xs:documentation>
@@ -1303,7 +1303,7 @@
 		<xs:complexContent>
 			<xs:extension base="BasicResponseType">
 				<xs:sequence>
-					<xs:element name="invoiceDigestResult" type="InvoiceDigestResultType" minOccurs="0">
+					<xs:element name="invoiceDigestResult" type="InvoiceDigestResultType">
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A számla kivonat lekérdezés eredményei</xs:documentation>
 							<xs:documentation xml:lang="en">Invoice digest query results</xs:documentation>
