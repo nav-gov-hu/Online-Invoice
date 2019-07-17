@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/07/08
+# Version: v2.0 2019/07/17
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
@@ -445,6 +445,32 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="AnnulmentDataType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Technikai érvénytelenítés státusz adatai</xs:documentation>
+			<xs:documentation xml:lang="en">Status data of technical annulment</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="annulmentVerificationStatus" type="AnnulmentVerificationStatusType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Technikai érvénytelenítő kérések jóváhagyási státusza</xs:documentation>
+					<xs:documentation xml:lang="en">Verification status of technial annulment requests</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annulmentDecisionDate" type="data:TimestampType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítés jóváhagyásának vagy elutasításának időpontja UTC időben</xs:documentation>
+					<xs:documentation xml:lang="en">Date of verification or rejection of the technical annulment in UTC time</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="annulmentDecisionUser" type="LoginType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A technikai érvénytelenítést jóváhagyó vagy elutasító felhasználó neve</xs:documentation>
+					<xs:documentation xml:lang="en">Login name of the user deciding over the technical annulment's verification or rejection</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="AnnulmentOperationListType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A kéréshez tartozó kötegelt technikai érvénytelenítések</xs:documentation>
@@ -611,7 +637,7 @@
 					<xs:documentation xml:lang="en">Basic result data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="software" type="SoftwareType" minOccurs="0">
+			<xs:element name="software" type="SoftwareType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlázóprogram adatai</xs:documentation>
 					<xs:documentation xml:lang="en">Billing software data</xs:documentation>
@@ -1153,10 +1179,10 @@
 					<xs:documentation xml:lang="hu">requestVersion value of the invoice exchange</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="annulmentVerificationStatus" type="AnnulmentVerificationStatusType" minOccurs="0">
+			<xs:element name="annulmentData" type="AnnulmentDataType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Technikai érvénytelenítő kérések jóváhagyási státusza</xs:documentation>
-					<xs:documentation xml:lang="en">Verification status of technial annulment requests</xs:documentation>
+					<xs:documentation xml:lang="hu">Technikai érvénytelenítés státusz adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Status data of technical annulment</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
