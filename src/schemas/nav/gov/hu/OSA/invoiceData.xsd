@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceData XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/06/19
+# Version: v2.0 2019/08/29
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:simpleType name="BankAccountNumberType">
@@ -186,16 +186,10 @@
 					<xs:documentation xml:lang="en">Supply of services</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
-			<xs:enumeration value="ANCILLARY_PRODUCT">
+			<xs:enumeration value="OTHER">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Termékértékesítéshez kapcsolódó szolgáltatás</xs:documentation>
-					<xs:documentation xml:lang="en">Ancillary services related to supply of goods</xs:documentation>
-				</xs:annotation>
-			</xs:enumeration>
-			<xs:enumeration value="ANCILLARY_SERVICE">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Szolgáltatáshoz kapcsolódó termékértékesítés</xs:documentation>
-					<xs:documentation xml:lang="en">Ancillary goods related to supply of services</xs:documentation>
+					<xs:documentation xml:lang="hu">Egyéb, nem besorolható</xs:documentation>
+					<xs:documentation xml:lang="en">Other, non-qualifyable</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -308,7 +302,7 @@
 		<xs:restriction base="xs:string">
 			<xs:minLength value="3"/>
 			<xs:maxLength value="10"/>
-			<xs:pattern value="^[A-Z0-9][A-Z0-9\s\-]{1,8}[A-Z0-9]$"/>
+			<xs:pattern value="[A-Z0-9][A-Z0-9\s\-]{1,8}[A-Z0-9]"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="ProductCodeCategoryType">
@@ -1326,7 +1320,7 @@
 					<xs:documentation xml:lang="en">Data of a single invoice or modification document</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="batchInvoice" type="BatchInvoiceType" minOccurs="2" maxOccurs="unbounded">
+			<xs:element name="batchInvoice" type="BatchInvoiceType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Kötegelt módosító okirat adatai</xs:documentation>
 					<xs:documentation xml:lang="en">Data of a batch of modification documents</xs:documentation>
@@ -1558,7 +1552,7 @@
 					<xs:documentation xml:lang="en">The value is true if the unit of measure of the invoice item is expressible in natural unit</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="lineNatureIndicator" type="LineNatureIndicatorType">
+			<xs:element name="lineNatureIndicator" type="LineNatureIndicatorType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Adott tételsor termékértékesítés vagy szolgáltatás nyújtás jellegének jelzése</xs:documentation>
 					<xs:documentation xml:lang="en">Indication of the nature of the supply of goods or services on a given line</xs:documentation>
@@ -2344,16 +2338,16 @@
 			<xs:documentation xml:lang="en">VAT data of given tax rate</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="vatRateVatAmountHUF" type="MonetaryType">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Az adott adómértékhez tartozó értékesítés vagy szolgáltatásnyújtás ÁFA összege forintban</xs:documentation>
-					<xs:documentation xml:lang="en">VAT amount of sales or service delivery under a given tax rate expressed in HUF</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="vatRateVatAmount" type="MonetaryType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az adott adómértékhez tartozó értékesítés vagy szolgáltatásnyújtás ÁFA összege a számla pénznemében</xs:documentation>
 					<xs:documentation xml:lang="en">VAT amount of sales or service delivery under a given tax rate expressed in the currency of the invoice</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="vatRateVatAmountHUF" type="MonetaryType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az adott adómértékhez tartozó értékesítés vagy szolgáltatásnyújtás ÁFA összege forintban</xs:documentation>
+					<xs:documentation xml:lang="en">VAT amount of sales or service delivery under a given tax rate expressed in HUF</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
