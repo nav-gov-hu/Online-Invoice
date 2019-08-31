@@ -115,7 +115,7 @@ A felsorolt főbb problémákon felül több adózói igény is érkezett egyes 
 
 A megfelelő bázis időszaki adatok előállításához a 3.0-ás interfész előtt már szükség van arra, ha a bejövő számlaadatok tartalmazzanak alap ÁFA analitikához szükséges információkat is.
 
-Ennek jegyében a számlasorokba új, kötelező minősítő tag került, a neve lineNatureIndicator. A tag értékkészlete alapján az egyes számlasorokban szereplő tételeket minősíteni kell a szerint, hogy a tétel termékértékesítésnek, szolgáltatás nyújtásnak, termékértékesítéshez kapcsolódó szolgáltatásnak, szolgáltatáshoz kapcsolódó termékértékesítésnek minősül-e.
+Ennek jegyében a számlasorokba új, opcionális minősítő tag került, a neve lineNatureIndicator. A tag értékkészlete alapján az egyes számlasorokban szereplő tételeket minősíteni kell a szerint, hogy a tétel termékértékesítésnek, szolgáltatás nyújtásnak vagy egyéb besorolásúnak minősül-e.
 
 Ezen felül, minden QuantityType és MonetaryType típusú elemben, az érték kifejezhető volt a számla pénznemében és forintban is, a nevezett elemek kiegészítésre kerültek a megfelelő párjukkal, az alábbiak szerint:
 
@@ -259,7 +259,7 @@ changes in detail, simply DIFF Version 2.0 and Version 1.1 in the pull request.
 
 In order to have adequate base interval data it is necessary to have the incoming data to carry basic VAT analytics related data even before interface version 3.0.  
 
-In light of this endeavour, line data has been supplemented with a new mandatory qualifier tag named lineNatureIndicator. Based on its values, all lines need to be classified whether they are supply of goods, supply of services, ancillary services related to supply of goods or ancillary goods related to supply of services.
+In light of this endeavour, line data has been supplemented with a new optional qualifier tag named lineNatureIndicator. Based on its values, all lines need to be classified whether they are supply of goods, supply of services or other .
 
 Furthermore, every QuantityType és MonetaryType element - where it is possible to express the value in the currency of the invoice or in HUF - have been supplemented with their corresponding pair as follows:
 
