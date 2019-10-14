@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/08/29
+# Version: v2.0 2019/10/14
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
@@ -1219,7 +1219,7 @@
 			<xs:documentation xml:lang="en">Processing results of the request</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="processingResult" type="ProcessingResultType" maxOccurs="100">
+			<xs:element name="processingResult" type="ProcessingResultType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla feldolgozási eredmény</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice processing result</xs:documentation>

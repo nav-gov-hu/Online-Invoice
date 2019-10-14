@@ -93,6 +93,7 @@ A felsorolt főbb problémákon felül több adózói igény is érkezett egyes 
 - A beszúrás időpontja data:TimestampType típusra változott és UTC időre kerül konvertálásra a válaszban
 - batchIndex opcionálisan megadható az egyes számla lekérdezésekben
 - névkonvenció miatt a korábbi /queryInvoiceStatus operáció átnevezésre került /queryTransactionStatus operációra
+- a /queryTransactionStatus operáció válaszában szereplő processingResult listaelem számossága unbounded értékre módosult
 
 ### 2.2) DATA sémaleíró
 
@@ -237,6 +238,7 @@ changes in detail, simply DIFF Version 2.0 and Version 1.1 in the pull request.
 - insert date is now changed to data:TimestampType and the value is converted to UTC time in the response
 - batchIndex may be optionaly provided in single invoice queries
 - the previous /queryInvoiceStatus operation is now renamed to /queryTransactionStatus operation due to naming convention
+- the cardinality of the processingRequest list element in the response of /queryTransactionStatus operation is now unbounded
 
 ### 2.2) DATA schema definition
 
