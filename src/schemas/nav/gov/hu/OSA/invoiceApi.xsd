@@ -3,7 +3,7 @@
 # Projekt: Magyar Online Számla Rendszer invoiceApi XML XSD séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/07/17
+# Version: v2.0 2019/10/14
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
@@ -723,6 +723,26 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="DateTimeIntervalParamType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Időpontos számla kereső paraméter</xs:documentation>
+			<xs:documentation xml:lang="en">Datestamp query params of invoice</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="dateTimeFrom" type="data:TimestampType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Időpontos intervallum nagyobb vagy egyenlő paramétere UTC idő szerint</xs:documentation>
+					<xs:documentation xml:lang="en">Datetime interval greater or equals parameter</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="dateTimeTo" type="data:TimestampType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Időpontos intervallum kisebb vagy egyenlő paramétere UTC idő szerint</xs:documentation>
+					<xs:documentation xml:lang="en">Datetime interval less or equals parameter</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="GeneralErrorResponseType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Általános hibatípus minden REST operációra</xs:documentation>
@@ -825,8 +845,8 @@
 			</xs:element>
 			<xs:element name="invoiceIssueDate" type="data:DateType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla kelte, vagy ha módosító okiratban nincs külön megadva, akkor a módosító okirat kiállításának dátuma</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice issue date, or if not provided explicitly in the modification document, the date of issue of the modification document</xs:documentation>
+					<xs:documentation xml:lang="hu">Számla vagy módosító okirat kiállításának dátuma</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice or modification document issue date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="supplierTaxNumber" type="data:TaxpayerIdType">
@@ -837,8 +857,8 @@
 			</xs:element>
 			<xs:element name="supplierGroupTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A kibocsátó adószáma</xs:documentation>
-					<xs:documentation xml:lang="en">The supplier's tax number</xs:documentation>
+					<xs:documentation xml:lang="hu">A kibocsátó csoporttag száma</xs:documentation>
+					<xs:documentation xml:lang="en">The supplier's group tax number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="supplierName" type="data:SimpleText512NotBlankType">
@@ -855,8 +875,8 @@
 			</xs:element>
 			<xs:element name="customerGroupTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">A vevő adószáma</xs:documentation>
-					<xs:documentation xml:lang="en">The buyer's tax number</xs:documentation>
+					<xs:documentation xml:lang="hu">A vevő csoporttag száma</xs:documentation>
+					<xs:documentation xml:lang="en">The buyer's group tax number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="customerName" type="data:SimpleText512NotBlankType" minOccurs="0">
@@ -937,6 +957,12 @@
 					<xs:documentation xml:lang="en">Sequence number of the invoice within the request</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="originalInvoiceNumber" type="data:SimpleText50NotBlankType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az eredeti számla sorszáma, melyre a módosítás vonatkozik</xs:documentation>
+					<xs:documentation xml:lang="en">Sequence number of the original invoice, on which the modification occurs</xs:documentation>
+				</xs:annotation>
+			</xs:element>
 			<xs:element name="modificationIndex" type="data:UnboundedIndexType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlára vonatkozó módosító okirat egyedi sorszáma</xs:documentation>
@@ -973,6 +999,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A módosító okirat sorszáma a kötegen belül</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the modification document within the batch</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="supplierTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Vevő oldali lekérdezés esetén a számla kiállítójának adószáma, ha több érvényes számla is megtalálható azonos sorszámmal</xs:documentation>
+					<xs:documentation xml:lang="en">The supplier's tax number in case of querying as customer, if the query result found more than one valid invoices with the same invoice number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1115,19 +1147,39 @@
 					<xs:documentation xml:lang="en">Date range of the invoice issue date</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="insDate" type="DateIntervalParamType">
+			<xs:element name="insDate" type="DateTimeIntervalParamType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Számla adatszolgáltatás feldolgozásának dátumtartománya (szerver helyi idő szerint)</xs:documentation>
-					<xs:documentation xml:lang="en">Date range of processing data exchange (as server local time)</xs:documentation>
+					<xs:documentation xml:lang="hu">Számla adatszolgáltatás feldolgozásának időpont tartománya UTC idő szerint</xs:documentation>
+					<xs:documentation xml:lang="en">Datetime range of processing data exchange in UTC time</xs:documentation>
 				</xs:annotation>
 			</xs:element>
+			<xs:element name="originalInvoiceNumber" type="OriginalInvoiceNumberQueryType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Számlalánc lekérdezése</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice chain query</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:choice>
+	</xs:complexType>
+	<xs:complexType name="OriginalInvoiceNumberQueryType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Számlalánc lekérdező paraméter</xs:documentation>
+			<xs:documentation xml:lang="en">Invoice chain query param</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
 			<xs:element name="originalInvoiceNumber" type="data:SimpleText50NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az eredeti számla sorszáma, melyre a módosítás vonatkozik</xs:documentation>
 					<xs:documentation xml:lang="en">Sequence number of the original invoice, on which the modification occurs</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-		</xs:choice>
+			<xs:element name="supplierTaxNumber" type="data:TaxpayerIdType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Vevő oldali lekérdezés esetén a számla kiállítójának adószáma, ha több érvényes számla is megtalálható azonos sorszámmal</xs:documentation>
+					<xs:documentation xml:lang="en">The supplier's tax number in case of querying as customer, if the query result found more than one valid invoices with the same invoice number</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:complexType name="PointerType">
 		<xs:annotation>
@@ -1167,7 +1219,7 @@
 			<xs:documentation xml:lang="en">Processing results of the request</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="processingResult" type="ProcessingResultType" maxOccurs="100">
+			<xs:element name="processingResult" type="ProcessingResultType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla feldolgozási eredmény</xs:documentation>
 					<xs:documentation xml:lang="en">Invoice processing result</xs:documentation>
@@ -1339,7 +1391,7 @@
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
-	<xs:complexType name="QuerySystemMetricsResponseType">
+	<xs:complexType name="QueryServiceMetricsResponseType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció válasz típusa</xs:documentation>
 			<xs:documentation xml:lang="en">Response type of the POST /querySystemMetrics REST operation</xs:documentation>
@@ -1347,10 +1399,10 @@
 		<xs:complexContent>
 			<xs:extension base="BasicResponseType">
 				<xs:sequence>
-					<xs:element name="metricsData" type="xs:base64Binary">
+					<xs:element name="invoiceMetrics" type="xs:base64Binary">
 						<xs:annotation>
-							<xs:documentation xml:lang="hu">Rendszer metrika adatok BASE64-ben kódolt tartalma</xs:documentation>
-							<xs:documentation xml:lang="en">System metrics data in BASE64 encoded form</xs:documentation>
+							<xs:documentation xml:lang="hu">Szolgáltatás metrika adatok BASE64-ben kódolt tartalma</xs:documentation>
+							<xs:documentation xml:lang="en">Service metrics data in BASE64 encoded form</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 					<xs:element name="metricsCreatedAt" type="xs:dateTime">
@@ -1883,10 +1935,10 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="QuerySystemMetricsRequest">
+	<xs:element name="QueryServiceMetricsRequest">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció kérésének root elementje</xs:documentation>
-			<xs:documentation xml:lang="en">Request root element of the POST /querySystemMetrics REST operation</xs:documentation>
+			<xs:documentation xml:lang="hu">A POST /queryServiceMetrics REST operáció kérésének root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Request root element of the POST /queryServiceMetrics REST operation</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
@@ -1894,14 +1946,14 @@
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>
-	<xs:element name="QuerySystemMetricsResponse">
+	<xs:element name="QueryServiceMetricsResponse">
 		<xs:annotation>
-			<xs:documentation xml:lang="hu">A POST /querySystemMetrics REST operáció válaszának root elementje</xs:documentation>
-			<xs:documentation xml:lang="en">Response root element of the POST /querySystemMetrics REST operation</xs:documentation>
+			<xs:documentation xml:lang="hu">A POST /queryServiceMetrics REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the POST /queryServiceMetrics REST operation</xs:documentation>
 		</xs:annotation>
 		<xs:complexType>
 			<xs:complexContent>
-				<xs:extension base="QuerySystemMetricsResponseType"/>
+				<xs:extension base="QueryServiceMetricsResponseType"/>
 			</xs:complexContent>
 		</xs:complexType>
 	</xs:element>

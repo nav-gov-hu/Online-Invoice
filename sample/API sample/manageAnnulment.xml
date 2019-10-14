@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ManageAnnulmentRequest xmlns="http://schemas.nav.gov.hu/OSA/2.0/api">
+	<header>
+		<requestId>RID338592103413</requestId>
+		<timestamp>2019-09-11T13:37:09.385Z</timestamp>
+		<requestVersion>2.0</requestVersion>
+		<headerVersion>1.0</headerVersion>
+	</header>
+	<user>
+		<login>lwilsmn0uqdxe6u</login>
+		<passwordHash>2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</passwordHash>
+		<taxNumber>11111111</taxNumber>
+		<requestSignature>A297E3BD9D7A4FEFC6382A65F58747BBFB5E2D5C5010204BBD29D0184DCAA267F3096B4B0B4D4CEB67A9D67CCE62D5504BA902F9AD65F27F0981A81959ADFAF5</requestSignature>
+		<!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
+		<!--<firstIndexHash>2E93720AC4A3F06A7212123053ADBECDD4DFF04035AA5A12AADA8129C9455FFA766AC7E853ECC057932F1568D9DFC724D9CDA9799F6506C2B5AE5834C2D6CB05</firstIndexHash>-->
+
+	</user>
+	<software>
+		<softwareId>123456789123456789</softwareId>
+		<softwareName>string</softwareName>
+		<softwareOperation>string</softwareOperation>
+		<softwareMainVersion>string</softwareMainVersion>
+		<softwareDevName>string</softwareDevName>
+		<softwareDevContact>string</softwareDevContact>
+		<softwareDevCountryCode>HU</softwareDevCountryCode>
+		<softwareDevTaxNumber>string</softwareDevTaxNumber>
+	</software>
+	<exchangeToken>dbd03076-3a9b-4312-bbbb-0cee3a6472572P11CS49ASIL</exchangeToken>
+	<annulmentOperations>
+		<annulmentOperation>
+			<index>1</index>
+			<annulmentOperation>ANNUL</annulmentOperation>
+			<invoiceAnnulment>PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9InllcyI/Pg0KPEludm9pY2VBbm51bG1lbnQgeG1sbnM9Imh0dHA6Ly9zY2hlbWFzLm5hdi5nb3YuaHUvT1NBLzIuMC9hbm51bCI+DQoJCTxhbm51bG1lbnRSZWZlcmVuY2U+MjIyMjIyMjI8L2FubnVsbWVudFJlZmVyZW5jZT4NCgkJPGFubnVsbWVudFRpbWVzdGFtcD4yMDE4LTA2LTE4VDA5OjEwOjQ1LjMwOVo8L2FubnVsbWVudFRpbWVzdGFtcD4NCgkJPGFubnVsbWVudENvZGU+RVJSQVRJQ19EQVRBPC9hbm51bG1lbnRDb2RlPg0KCQk8YW5udWxtZW50UmVhc29uPmNyZWF0ZSBzemFtbGEgYW5udWw8L2FubnVsbWVudFJlYXNvbj4NCjwvSW52b2ljZUFubnVsbWVudD4=</invoiceAnnulment>
+		</annulmentOperation>
+	</annulmentOperations>
+</ManageAnnulmentRequest>

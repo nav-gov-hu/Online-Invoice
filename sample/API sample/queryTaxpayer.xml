@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QueryTaxpayerRequest xmlns="http://schemas.nav.gov.hu/OSA/2.0/api">
+	<header>
+		<requestId>RID215118906689</requestId>
+		<timestamp>2019-09-11T11:11:08.579Z</timestamp>
+		<requestVersion>2.0</requestVersion>
+		<headerVersion>1.0</headerVersion>
+	</header>
+	<user>
+		<login>lwilsmn0uqdxe6u</login>
+		<passwordHash>2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</passwordHash>
+		<taxNumber>11111111</taxNumber>
+		<requestSignature>C5ADE8A2231C509D2887E6C2C4406CC5F72CA25B070AD3E94FADFA3F91A8A3667AF882DEDC7D67E9086E3D34A95886E929ACD8C924CD1E8357C89BEF43BA9126</requestSignature>
+		<!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
+	</user>
+	<software>
+		<softwareId>123456789123456789</softwareId>
+		<softwareName>string</softwareName>
+		<softwareOperation>string</softwareOperation>
+		<softwareMainVersion>string</softwareMainVersion>
+		<softwareDevName>string</softwareDevName>
+		<softwareDevContact>string</softwareDevContact>
+		<softwareDevCountryCode>HU</softwareDevCountryCode>
+		<softwareDevTaxNumber>string</softwareDevTaxNumber>
+	</software>
+	<taxNumber>22222222</taxNumber>
+</QueryTaxpayerRequest>
