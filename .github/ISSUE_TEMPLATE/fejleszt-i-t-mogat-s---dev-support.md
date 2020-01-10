@@ -28,9 +28,6 @@ Fejlesztői támogatás csak és kizárólag a teszt környezetben az XML API im
 [] 2.0
 
 **A requestId értéke / requestId value**
-
-
-**A request body tartalma a user XML csomópont nélkül / request body content without the user XML node**
 ```
 
 ```
