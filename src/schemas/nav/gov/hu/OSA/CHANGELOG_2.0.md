@@ -132,6 +132,22 @@ Ezen felül, minden QuantityType és MonetaryType típusú elemben, az érték k
 
 Az elemek kötelezősége öröklődik a sémában már korábban definiált párjukból.
 
+4) Változások 2020.02.06-án
+
+### 4.1) API sémaleíró
+
+- a requestVersion és headerVersion tagekről lekerültek a default értékek, mostantól nem lehet önbezárt taget küldeni ezeknél
+- a /queryTaxpayer válaszában új elemek kerültek (infoDate, taxNumberDetail)
+- a /queryTaxpayer válaszában a címadat listatípusra módosult (taxpayerAddressItem), a címadatok mellett a taxpayerAddressType elemben a cím típusa (székhely, telephely, fióktelep)
+- a /queryInvoiceDigest kérésében az OriginalInvoiceNumberQueryType típus törlésre került, a mandatoryQueryParams/originalInvoiceNumber útvonal mostantól element, nem komplex típus
+- a /queryInvoiceDigest kérésében az additionalQueryParams típus bővítésre került a taxNumber paraméterrel, amely a megtalált eredményeket szűkíti a megadott adószámmal (a keresett mező a keresés irányától függ ugyan úgy, ahogy a csomópont többi eleménél). Ezt kell használni a korábbi originalInvoiceNumber/supplierTaxNumber szűrés megadására vevő oldali lekérdezéskor.
+- bevezetésre került a /queryInvoiceChainDigest operáció és a hozzá kapcsolódó request/response elemek
+- bevezetésre került a /queryTransactionList operáció és a hozzá kapcsolódó request/response elemek
+
+### 4.2) serviceMetrics sémaleíró
+
+- a rendszer publikus működési metrikáit és a lekérdezések válaszstruktúráját tartalmazó séma publikálásra került
+
 --------------------------------------------------------------------------------------------------------------------------------------------
 
 # Changelog 2.0
@@ -276,3 +292,19 @@ Furthermore, every QuantityType és MonetaryType element - where it is possible 
 - VAT rate gross amount in HUF (invoiceSummary/summaryNormal/summaryByVatRate/vatRateGrossData/vatRateGrossAmountHUF)
 
 Cardinality of the new elements is inherited from their pair previously defined in the schema.
+
+4) Changes on 06.02.2020
+
+### 4.1) API schema definition
+
+- default values of requestVersion and headerVersion elements are discarded, it not possible from now on to send self-closed tags
+- the response of /queryTaxpayer now contains new elements (infoDate, taxNumberDetail)
+- the address element in the response of /queryTaxpayer is now a list type (taxpayerAddressItem), and the qualifier of the addresses (hq, branch, site) is also returned
+- OriginalInvoiceNumberQueryType in the request of /queryInvoiceDigest is deleted, the mandatoryQueryParams/originalInvoiceNumber path is now an element, not a complex type
+- the additionalQueryParams type in the request of /queryInvoiceDigest is now extended with the taxNumber param, which filters the found invoices with the provided tax number. (the searched field is depending on the direction of the query, just like in case of the other similar elements) This tag must be used for setting the previous originalInvoiceNumber/supplierTaxNumber serch criteria in case of an inbound query.
+- /queryInvoiceChainDigest operation is now added, along with it's own request/response elements
+- /queryTransactionList operation is now added, along with it's own request/response elements
+
+### 4.2) serviceMetrics schema definition
+
+- the schema containing the response structure of the system's public operational metrics is now public
