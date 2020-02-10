@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+# Projekt: Magyar Online Számla Rendszer serviceMetrics XML XSD séma
+# Author: NAV Informatikai Intézet
+
+# Version: v2.0 2020/02/06
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/metrics" xmlns:api="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/metrics" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/api" schemaLocation="invoiceApi.xsd"/>
+	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
+	<xs:simpleType name="LanguageType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Nyelv megnevezés típus</xs:documentation>
+			<xs:documentation xml:lang="en">Language naming type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="HU">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Magyar nyelv</xs:documentation>
+					<xs:documentation xml:lang="en">Hungarian language</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="EN">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Angol nyelv</xs:documentation>
+					<xs:documentation xml:lang="en">English language</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="DE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Német nyelv</xs:documentation>
+					<xs:documentation xml:lang="en">German language</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="MetricTypeType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Metrika típusának leírója</xs:documentation>
+			<xs:documentation xml:lang="en">Metric's descriptor type</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="COUNTER">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Növekmény típusú metrika</xs:documentation>
+					<xs:documentation xml:lang="en">Incremental type metric</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="GAUGE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Pillanatkép típusú metrika</xs:documentation>
+					<xs:documentation xml:lang="en">Snapshot type metric</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="HISTOGRAM">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Kvantilis típusú, eloszlást mérő metrika</xs:documentation>
+					<xs:documentation xml:lang="en">Quantile type, dispersion sampler metric</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="SUMMARY">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Összegző érték típusú metrika</xs:documentation>
+					<xs:documentation xml:lang="en">Sum value type metric</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="MetricDefinitionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Metrika definíció típus</xs:documentation>
+			<xs:documentation xml:lang="en">Metric definition type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metricName" type="data:SimpleText200NotBlankType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika neve</xs:documentation>
+					<xs:documentation xml:lang="en">Metric's name</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="metricType" type="MetricTypeType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika típusa</xs:documentation>
+					<xs:documentation xml:lang="hu">Metric's type</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="metricDescription" type="MetricDescriptionType" minOccurs="3" maxOccurs="3">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika leírása</xs:documentation>
+					<xs:documentation xml:lang="en">Metric's description</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetricDescriptionType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Metrika leírás típus</xs:documentation>
+			<xs:documentation xml:lang="en">Metric description type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="language" type="LanguageType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Nyelv megnevezés</xs:documentation>
+					<xs:documentation xml:lang="en">Language naming</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="localizedDescription" type="data:SimpleText512NotBlankType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Lokalizált leírás</xs:documentation>
+					<xs:documentation xml:lang="en">Localized description</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetricType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Metrika típus</xs:documentation>
+			<xs:documentation xml:lang="en">Metric data type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metricDefinition" type="MetricDefinitionType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika definíció</xs:documentation>
+					<xs:documentation xml:lang="en">Metric definition</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="metricValues" type="MetricValueType" minOccurs="0" maxOccurs="60">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika értékek</xs:documentation>
+					<xs:documentation xml:lang="en">Metric values</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MetricValueType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Metrika érték típus</xs:documentation>
+			<xs:documentation xml:lang="en">Metric value type</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="value" type="xs:decimal">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika értéke</xs:documentation>
+					<xs:documentation xml:lang="en">Metric's value</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="timestamp" type="data:TimestampType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika értékének időpontja UTC időben</xs:documentation>
+					<xs:documentation xml:lang="en">Time of metric value in UTC time</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="QueryServiceMetricsListResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A GET /queryServiceMetrics/list REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the GET /queryServiceMetrics/list REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="metricDefinition" type="MetricDefinitionType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika definíciói</xs:documentation>
+					<xs:documentation xml:lang="en">Metric defintions</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="QueryServiceMetricsResponseType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A GET /queryServiceMetrics REST operáció válasz típusa</xs:documentation>
+			<xs:documentation xml:lang="en">Response type of the GET /queryServiceMetrics REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="result" type="api:BasicResultType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Alap válaszeredmény adatok</xs:documentation>
+					<xs:documentation xml:lang="en">Basic result data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="metricsLastUpdateTime" type="data:TimestampType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">A metrikák utolsó frissítésének időpontja UTC időben</xs:documentation>
+					<xs:documentation xml:lang="en">Last update time of metrics in UTC time</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="metric" type="MetricType" minOccurs="0" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Metrika adatai</xs:documentation>
+					<xs:documentation xml:lang="en">Metric data</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:element name="QueryServiceMetricsListResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A GET /queryServiceMetrics/list REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the GET /queryServiceMetrics/list REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryServiceMetricsListResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="QueryServiceMetricsResponse">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">A GET /queryServiceMetrics REST operáció válaszának root elementje</xs:documentation>
+			<xs:documentation xml:lang="en">Response root element of the GET /queryServiceMetrics REST operation</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="QueryServiceMetricsResponseType"/>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

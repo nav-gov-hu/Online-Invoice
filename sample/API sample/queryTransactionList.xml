@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<TokenExchangeRequest xmlns="http://schemas.nav.gov.hu/OSA/2.0/api">
+<QueryTransactionListRequest xmlns="http://schemas.nav.gov.hu/OSA/2.0/api">
 	<header>
-		<requestId>RID896801578348</requestId>
-		<timestamp>2019-09-11T10:55:31.440Z</timestamp>
+		<requestId>RID269353674733</requestId>
+		<timestamp>2020-02-05T08:54:27.238Z</timestamp>
 		<requestVersion>2.0</requestVersion>
 		<headerVersion>1.0</headerVersion>
 	</header>
@@ -10,7 +10,7 @@
 		<login>lwilsmn0uqdxe6u</login>
 		<passwordHash>2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</passwordHash>
 		<taxNumber>11111111</taxNumber>
-		<requestSignature>B4B5E0F197BFFD3DF69BCC98D3BE775F65FD5445EEF95C9D6B6C59425F2B81C4F6DA1FD563B0C7E7D98AF1E1725E5C63C2803B5D3A93D1C02ED354AC92F2CC94</requestSignature>
+		<requestSignature>54741EAEC6D929A4CA0B18CBC0839B229413EE972F16E7188873326A3DACBCF8A65447DC6C5E1141F790E7608B1F5FA7A70059D71BC7F2BF2C7FB3C0A77ABE58</requestSignature>
 		<!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
 	</user>
 	<software>
@@ -23,4 +23,9 @@
 		<softwareDevCountryCode>HU</softwareDevCountryCode>
 		<softwareDevTaxNumber>string</softwareDevTaxNumber>
 	</software>
-</TokenExchangeRequest>
+	<page>1</page>
+	<insDate>
+	<dateTimeFrom>2020-02-05T06:46:42.223Z</dateTimeFrom>
+	<dateTimeTo>2020-02-05T08:53:16.165Z</dateTimeTo>
+	</insDate>
+</QueryTransactionListRequest>
