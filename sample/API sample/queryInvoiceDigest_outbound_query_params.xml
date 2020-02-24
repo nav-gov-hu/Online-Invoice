@@ -35,9 +35,7 @@
 				<dateFrom>2019-01-01</dateFrom>
 				<dateTo>2019-01-01</dateTo>
 			</insDate>
-			<originalInvoiceNumber>
-				<originalInvoiceNumber>string</originalInvoiceNumber>
-			</originalInvoiceNumber>-->
+			<originalInvoiceNumber>string</originalInvoiceNumber>-->
 		</mandatoryQueryParams>
 		<additionalQueryParams>
 			<taxNumber>22222222</taxNumber>
