@@ -17,9 +17,11 @@ Fejlesztői támogatás csak és kizárólag a teszt környezetben az XML API im
 **Hívott API operáció / called API operation**
 [] /manageAnnulment
 [] /manageInvoice
+[] /queryInvoiceChainDigest
 [] /queryInvoiceCheck
 [] /queryInvoiceData
 [] /queryInvoiceDigest
+[] /queryTransactionList
 [] /queryTransactionStatus
 [] /tokenExchange
 

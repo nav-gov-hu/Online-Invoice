@@ -85,8 +85,8 @@
 					<invoiceVatAmountHUF>0</invoiceVatAmountHUF>
 				</summaryNormal>
 				<summaryGrossData>
-					<invoiceGrossAmount>4572000</invoiceGrossAmount>
-					<invoiceGrossAmountHUF>4572000</invoiceGrossAmountHUF>
+					<invoiceGrossAmount>0</invoiceGrossAmount>
+					<invoiceGrossAmountHUF>0</invoiceGrossAmountHUF>
 				</summaryGrossData>
 			</invoiceSummary>
 		</invoice>
