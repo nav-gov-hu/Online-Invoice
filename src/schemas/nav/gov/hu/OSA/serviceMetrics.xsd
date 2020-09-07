@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-# Projekt: Magyar Online Számla Rendszer serviceMetrics XML XSD séma
+# Project: Magyar Online Számla Rendszer serviceMetrics XML séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2020/02/06
+# Version: v3.0 2020/07/31
 -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/2.0/metrics" xmlns:api="http://schemas.nav.gov.hu/OSA/2.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/metrics" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/api" schemaLocation="invoiceApi.xsd"/>
-	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/3.0/metrics" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/metrics" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common"/>
+	<xs:import namespace="http://schemas.nav.gov.hu/OSA/3.0/base"/>
 	<xs:simpleType name="LanguageType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Nyelv megnevezés típus</xs:documentation>
 			<xs:documentation xml:lang="en">Language naming type</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:string">
+		<xs:restriction base="common:AtomicStringType2">
 			<xs:enumeration value="HU">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Magyar nyelv</xs:documentation>
@@ -39,7 +39,7 @@
 			<xs:documentation xml:lang="hu">Metrika típusának leírója</xs:documentation>
 			<xs:documentation xml:lang="en">Metric's descriptor type</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:string">
+		<xs:restriction base="common:AtomicStringType15">
 			<xs:enumeration value="COUNTER">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Növekmény típusú metrika</xs:documentation>
@@ -72,7 +72,7 @@
 			<xs:documentation xml:lang="en">Metric definition type</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="metricName" type="data:SimpleText200NotBlankType">
+			<xs:element name="metricName" type="common:SimpleText200NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Metrika neve</xs:documentation>
 					<xs:documentation xml:lang="en">Metric's name</xs:documentation>
@@ -104,7 +104,7 @@
 					<xs:documentation xml:lang="en">Language naming</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="localizedDescription" type="data:SimpleText512NotBlankType">
+			<xs:element name="localizedDescription" type="common:SimpleText512NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Lokalizált leírás</xs:documentation>
 					<xs:documentation xml:lang="en">Localized description</xs:documentation>
@@ -138,13 +138,13 @@
 			<xs:documentation xml:lang="en">Metric value type</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="value" type="xs:decimal">
+			<xs:element name="value" type="common:GenericDecimalType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Metrika értéke</xs:documentation>
 					<xs:documentation xml:lang="en">Metric's value</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="timestamp" type="data:TimestampType">
+			<xs:element name="timestamp" type="base:InvoiceTimestampType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Metrika értékének időpontja UTC időben</xs:documentation>
 					<xs:documentation xml:lang="en">Time of metric value in UTC time</xs:documentation>
@@ -161,7 +161,7 @@
 			<xs:element name="metricDefinition" type="MetricDefinitionType" minOccurs="0" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Metrika definíciói</xs:documentation>
-					<xs:documentation xml:lang="en">Metric defintions</xs:documentation>
+					<xs:documentation xml:lang="en">Metric definitions</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -172,13 +172,13 @@
 			<xs:documentation xml:lang="en">Response type of the GET /queryServiceMetrics REST operation</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="result" type="api:BasicResultType">
+			<xs:element name="result" type="common:BasicResultType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Alap válaszeredmény adatok</xs:documentation>
 					<xs:documentation xml:lang="en">Basic result data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="metricsLastUpdateTime" type="data:TimestampType" minOccurs="0">
+			<xs:element name="metricsLastUpdateTime" type="base:InvoiceTimestampType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A metrikák utolsó frissítésének időpontja UTC időben</xs:documentation>
 					<xs:documentation xml:lang="en">Last update time of metrics in UTC time</xs:documentation>
