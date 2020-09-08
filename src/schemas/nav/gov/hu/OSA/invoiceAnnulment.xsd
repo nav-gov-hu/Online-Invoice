@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-# Projekt: Magyar Online Számla Rendszer invoiceAnnulment XML XSD séma
+# Project: Magyar Online Számla Rendszer invoiceAnnulment XML séma
 # Author: NAV Informatikai Intézet
 
-# Version: v2.0 2019/04/02
+# Version: v3.0 2020/07/31
 -->
-<xs:schema xmlns="http://schemas.nav.gov.hu/OSA/2.0/annul" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:data="http://schemas.nav.gov.hu/OSA/2.0/data" targetNamespace="http://schemas.nav.gov.hu/OSA/2.0/annul" elementFormDefault="qualified" attributeFormDefault="unqualified">
-	<xs:import namespace="http://schemas.nav.gov.hu/OSA/2.0/data" schemaLocation="invoiceData.xsd"/>
+<xs:schema xmlns="http://schemas.nav.gov.hu/OSA/3.0/annul" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/annul" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common"/>
+	<xs:import namespace="http://schemas.nav.gov.hu/OSA/3.0/base"/>
 	<xs:simpleType name="AnnulmentCodeType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Technikai érvénytelenítés kód típusa</xs:documentation>
-			<xs:documentation xml:lang="en">Technical annulment  code type</xs:documentation>
+			<xs:documentation xml:lang="en">Technical annulment code type</xs:documentation>
 		</xs:annotation>
-		<xs:restriction base="xs:string">
+		<xs:restriction base="common:AtomicStringType32">
 			<xs:enumeration value="ERRATIC_DATA">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Hibás adattartalom miatti technikai érvénytelenítés</xs:documentation>
@@ -31,6 +32,12 @@
 					<xs:documentation xml:lang="en">Technical annulment due to erratic invoice issue date</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
+			<xs:enumeration value="ERRATIC_ELECTRONIC_HASH_VALUE">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Hibás elektronikus számla hash érték miatti technikai érvénytelenítés</xs:documentation>
+					<xs:documentation xml:lang="en">Technical annulment due to erratic electronic invoice hash value</xs:documentation>
+				</xs:annotation>	
+			</xs:enumeration>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="InvoiceAnnulmentType">
@@ -39,13 +46,13 @@
 			<xs:documentation xml:lang="en">Data of technical annulment concerning previous data exchange</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="annulmentReference" type="data:SimpleText50NotBlankType">
+			<xs:element name="annulmentReference" type="common:SimpleText50NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A technikai érvénytelenítéssel érintett számla vagy módosító okirat sorszáma</xs:documentation>
 					<xs:documentation xml:lang="en">Sequential number of the invoice or modification document to be annuled</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="annulmentTimestamp" type="data:TimestampType">
+			<xs:element name="annulmentTimestamp" type="base:InvoiceTimestampType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A technikai érvénytelenítés időbélyege a forrásrendszerben UTC idő szerint</xs:documentation>
 					<xs:documentation xml:lang="en">Timestamp of the technical annulment in UTC time</xs:documentation>
@@ -57,7 +64,7 @@
 					<xs:documentation xml:lang="en">Technical annulment code</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="annulmentReason" type="data:SimpleText1024NotBlankType">
+			<xs:element name="annulmentReason" type="common:SimpleText1024NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A technikai érvénytelenítés oka</xs:documentation>
 					<xs:documentation xml:lang="en">Technical annulment reason</xs:documentation>

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<QueryInvoiceCheckRequest xmlns="http://schemas.nav.gov.hu/OSA/2.0/api">
-	<header>
-		<requestId>RID016714253462</requestId>
-		<timestamp>2019-09-11T11:14:36.598Z</timestamp>
-		<requestVersion>2.0</requestVersion>
-		<headerVersion>1.0</headerVersion>
-	</header>
-	<user>
-		<login>lwilsmn0uqdxe6u</login>
-		<passwordHash>2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</passwordHash>
-		<taxNumber>11111111</taxNumber>
-		<requestSignature>528B23AB4202FC7327F895A51B64EDE4199A81D776DEF1C7AF625A037D41BB98D61A9F2A2A444D8AAB7BB55737E0DAD9E1E46420C8FF1B7AA8EBBE4459CCF351</requestSignature>
+<QueryInvoiceCheckRequest xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api">
+	<common:header>
+		<common:requestId>RID016714253462</common:requestId>
+		<common:timestamp>2019-09-11T11:14:36.598Z</common:timestamp>
+		<common:requestVersion>3.0</common:requestVersion>
+		<common:headerVersion>1.0</common:headerVersion>
+	</common:header>
+	<common:user>
+		<common:login>lwilsmn0uqdxe6u</common:login>
+		<common:passwordHash cryptoType="SHA2-512">2F43840A882CFDB7DB0FEC07D419D030D864B47B6B541DC280EF81B937B7A176E33C052B0D26638CC18A7A2C08D8D311733078A774BF43F6CA57FE8CD74DC28E</common:passwordHash>
+		<common:taxNumber>11111111</common:taxNumber>
+		<common:requestSignature cryptoType="SHA3-512">528B23AB4202FC7327F895A51B64EDE4199A81D776DEF1C7AF625A037D41BB98D61A9F2A2A444D8AAB7BB55737E0DAD9E1E46420C8FF1B7AA8EBBE4459CCF351</common:requestSignature>
 		<!--<signKey>ac-ac3a-7f661bff7d342N43CYX4U9FG</signKey>-->
-	</user>
+	</common:user>
 	<software>
 		<softwareId>123456789123456789</softwareId>
 		<softwareName>string</softwareName>
