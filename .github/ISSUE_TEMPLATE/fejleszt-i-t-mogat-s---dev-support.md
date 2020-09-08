@@ -28,6 +28,7 @@ Fejlesztői támogatás csak és kizárólag a teszt környezetben az XML API im
 **A kérés verziója / version of the request**
 [] 1.1
 [] 2.0
+[] 3.0
 
 **A requestId értéke / requestId value**
 ```
