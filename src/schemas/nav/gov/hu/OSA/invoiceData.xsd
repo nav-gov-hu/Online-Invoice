@@ -3,7 +3,7 @@
 # Project: Magyar Online Számla Rendszer invoiceData XML séma
 # Author: NAV Informatikai Intézet
 
-# Version: v3.0 2020/07/31
+# Version: v3.0 2020/09/16
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common"/>
@@ -658,10 +658,10 @@
 					<xs:documentation xml:lang="en">Project numbers</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="generalLedgerInvoiceNumbers" type="GeneralLedgerInvoiceNumbersType" minOccurs="0">
+			<xs:element name="generalLedgerAccountNumbers" type="GeneralLedgerAccountNumbersType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Főkönyvi számlaszám(ok)</xs:documentation>
-					<xs:documentation xml:lang="en">General ledger invoice numbers</xs:documentation>
+					<xs:documentation xml:lang="en">General ledger account numbers</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="glnNumbers" type="GlnNumbersType" minOccurs="0">
@@ -674,6 +674,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Anyagszám(ok)</xs:documentation>
 					<xs:documentation xml:lang="en">Material numbers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="itemNumbers" type="ItemNumbersType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Cikkszám(ok)</xs:documentation>
+					<xs:documentation xml:lang="en">Item number(s)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="ekaerIds" type="EkaerIdsType" minOccurs="0">
@@ -966,16 +972,16 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
-	<xs:complexType name="GeneralLedgerInvoiceNumbersType">
+	<xs:complexType name="GeneralLedgerAccountNumbersType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Főkönyvi számlaszámok</xs:documentation>
-			<xs:documentation xml:lang="en">General ledger invoice numbers</xs:documentation>
+			<xs:documentation xml:lang="en">General ledger account numbers</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="generalLedgerInvoiceNumber" type="common:SimpleText100NotBlankType" maxOccurs="unbounded">
+			<xs:element name="generalLedgerAccountNumber" type="common:SimpleText100NotBlankType" maxOccurs="unbounded">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Főkönyvi számlaszám</xs:documentation>
-					<xs:documentation xml:lang="en">General ledger invoice number</xs:documentation>
+					<xs:documentation xml:lang="en">General ledger account number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1054,7 +1060,7 @@
 					<xs:documentation xml:lang="en">In case any currency is used other than HUF, the applied exchange rate should be mentioned: 1 unit of the foreign currency expressed in HUF</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="utilitySettlementIndicator" type="xs:boolean">
+			<xs:element name="utilitySettlementIndicator" type="xs:boolean" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Közmű elszámoló számla jelölése (2013.évi CLXXXVIII törvény szerinti elszámoló számla)</xs:documentation>
 					<xs:documentation xml:lang="en">Marking the fact of utility settlement invoice (invoice according to Act CLXXXVIII of 2013)</xs:documentation>
@@ -1248,6 +1254,20 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az ÁFA törvény szerinti összesítő adatok</xs:documentation>
 					<xs:documentation xml:lang="en">Summary data according to VAT law</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ItemNumbersType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Cikkszámok</xs:documentation>
+			<xs:documentation xml:lang="en">Item numbers</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="itemNumber" type="common:SimpleText100NotBlankType" maxOccurs="unbounded">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Cikkszám</xs:documentation>
+					<xs:documentation xml:lang="en">Item number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -1560,7 +1580,7 @@
 					<xs:documentation xml:lang="en">Data on the content of the line's product charge</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="conventionalInvoiceInfo" type="ConventionalInvoiceInfoType" minOccurs="0">
+			<xs:element name="conventionalLineInfo" type="ConventionalInvoiceInfoType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A számlafeldolgozást segítő, egyezményesen nevesített egyéb adatok</xs:documentation>
 					<xs:documentation xml:lang="en">Other conventionally named data to assist in invoice processing</xs:documentation>
@@ -2208,7 +2228,7 @@
 					<xs:documentation xml:lang="en">Margin scheme not including input tax</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="vatAmountMismatch" type="common:SimpleText100NotBlankType">
+			<xs:element name="vatAmountMismatch" type="DetailedReasonType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Adóalap és felszámított adó eltérésének esetei</xs:documentation>
 					<xs:documentation xml:lang="en">Different cases of mismatching tax base and levied tax</xs:documentation>
