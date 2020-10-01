@@ -9,7 +9,9 @@ Teszt rendszer API: https://api-test.onlineszamla.nav.gov.hu/
 Éles rendszer frontend: https://onlineszamla.nav.gov.hu/  
 Éles rendszer API: https://api.onlineszamla.nav.gov.hu/  
 
-Dokumentációk: https://onlineszamla.nav.gov.hu/dokumentaciok  
+Aktuális API dokumentáció: https://github.com/nav-gov-hu/Online-Invoice/blob/master/docs/API%20docs/hu/Online%20Szamla_interfesz%20specifik%C3%A1ci%C3%B3_HU_v3.0.pdf
+
+Fejlesztői dokumentációk: https://onlineszamla.nav.gov.hu/dokumentaciok  
 Fejlesztői napló: https://onlineszamla.nav.gov.hu/fejlesztoi_naplo  
 
 ## 1) A tárhely tartalma és célja
@@ -22,11 +24,11 @@ Kérjük figyelembe venni, hogy bár a tárhely publikusan elérhető, a vélem�
 
 ## 2) Hogyan tudok a projekttel kapcsolatban kérdezni?
 
-A tárhely jelenlegi tartalma alapján a már kiadott, illetve tervezett XSD verziók véleményezésére van lehetőség. A részletekről tájékoztatás a [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/CONTRIBUTING.md) fájlban található.
+A tárhely jelenlegi tartalma alapján a már kiadott, illetve tervezett XSD verziók véleményezésére van lehetőség. A részletekről tájékoztatás a [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/internal/CONTRIBUTING.md) fájlban található.
 
 ## 3) Hogyan tudok a projekthez hozzájárulni?
 
-A projekt alatt wiki és pull request feladási lehetőség van. A részletekről tájékoztatás a [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/CONTRIBUTING.md) fájlban található.
+A projekt alatt wiki és pull request feladási lehetőség van. A részletekről tájékoztatás a [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/internal/CONTRIBUTING.md) fájlban található.
 
 ## 4) Nyelvhasználat
 
@@ -41,10 +43,12 @@ Welcome to the public repository of the Online Invoicing System!
 
 Test environment frontend: https://onlineszamla-test.nav.gov.hu/  
 Test environment API: https://api-test.onlineszamla.nav.gov.hu/  
-Live system frontend: https://onlineszamla.nav.gov.hu/  
-Live system API: https://api.onlineszamla.nav.gov.hu/  
+Production system frontend: https://onlineszamla.nav.gov.hu/  
+Production system API: https://api.onlineszamla.nav.gov.hu/  
 
-Documentation: https://onlineszamla.nav.gov.hu/dokumentaciok  
+Actual API documentation: translation pending
+
+Developer documentation: https://onlineszamla.nav.gov.hu/dokumentaciok  
 Developer diary: https://onlineszamla.nav.gov.hu/fejlesztoi_naplo
 
 ## 1) Content and purpose of the repository
@@ -63,11 +67,11 @@ accounts are free of charge, and can be created in a matter of minutes.
 ## 2) How can I request information about the project?
 
 Based on the current content of the repository, comments can be submitted for any already published or planned XSD versions. Please see
-the [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/CONTRIBUTING.md) file for details.
+the [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/internal/CONTRIBUTING.md) file for details.
 
 ## 3) How can I contribute to the project?
 
-A wiki and a pull request submission function will be available for the duration of the project. Please see the [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/CONTRIBUTING.md) file for details.
+A wiki and a pull request submission function will be available for the duration of the project. Please see the [CONTRIBUTING.md](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/internal/CONTRIBUTING.md) file for details.
 
 ## 4) Use of language
 

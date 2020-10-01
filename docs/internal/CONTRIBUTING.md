@@ -10,7 +10,7 @@ A fájlok közötti különbség megtekintésére a GitHub több nézetet is fel
 
 Például, az 1.1 és a 2.0 közötti különbséget az alábbi URL-en lehet megnézni: https://github.com/nav-gov-hu/Online-Invoice/commit/0da32edd71c68da2e529d704f06825317767245e?diff=split
 
-A változásokat javasoljuk összeolvasni minden esetben az aktuális [CHANGELOG.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_2.0.md) fájllal, ami segít az áttekintésben.
+A változásokat javasoljuk összeolvasni minden esetben az aktuális changelog [CHANGELOG 2.0.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_2.0.md), illetve [CHANGELOG 3.0.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_3.0.md) fájllal, ami segít az áttekintésben.
 
 ## 2) Fejlesztési ötletem vagy kérdésem van (issue)
 
@@ -92,7 +92,7 @@ GitHub offers multiple views for reviewing differences between files. The simple
 differences using URL params. For example, the differences between Versions 1.1 and 2.0 can be viewed at the following URL:
 https://github.com/nav-gov-hu/Online-Invoice/commit/0da32edd71c68da2e529d704f06825317767245e?diff=split
 
-We recommend always reviewing changes alongside the latest [CHANGELOG.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_2.0.md) file, which will help with the review.
+We recommend always reviewing changes alongside the latest [CHANGELOG 2.0.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_2.0.md) or [CHANGELOG 3.0.md](https://github.com/nav-gov-hu/Online-Invoice/blob/master/src/schemas/nav/gov/hu/OSA/CHANGELOG_3.0.md) file, which will help with the review.
 
 ## 2) I have a development idea or question (issue)
 
