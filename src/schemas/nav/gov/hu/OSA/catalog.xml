@@ -4,7 +4,7 @@
 	<uri name="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="./files/NTCA/Common/common.xsd"/>
 	<uri name="http://schemas.nav.gov.hu/OSA/3.0/base" uri="./files/OSA/Invoice/invoiceBase.xsd"/>
 <!--reference as name & URI-->
-	<!--<uri name="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="https://raw.githubusercontent.com/nav-gov-hu/Common/Common-1.0.RC2/src/schemas/nav/gov/hu/NTCA/common.xsd"/>-->
+	<!--<uri name="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="https://raw.githubusercontent.com/nav-gov-hu/Common/Common-1.0.RC3/src/schemas/nav/gov/hu/NTCA/common.xsd"/>-->
 </catalog>
 
 
@@ -15,5 +15,5 @@
 	<!--<public publicId="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="./files/NTCA/Common/common.xsd"/>-->
 	<!--<public publicId="http://schemas.nav.gov.hu/OSA/3.0/base" uri="./files/OSA/Invoice/invoiceBase.xsd"/>-->
 <!--reference as publicId & URI-->
-	<!--<public publicId="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="https://raw.githubusercontent.com/nav-gov-hu/Common/Common-1.0.RC2/src/schemas/nav/gov/hu/NTCA/common.xsd"/>-->
+	<!--<public publicId="http://schemas.nav.gov.hu/NTCA/1.0/common" uri="https://raw.githubusercontent.com/nav-gov-hu/Common/Common-1.0.RC3/src/schemas/nav/gov/hu/NTCA/common.xsd"/>-->
 <!--</catalog>-->
