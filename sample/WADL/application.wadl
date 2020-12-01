@@ -1,6 +1,113 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://wadl.dev.java.net/2009/02" xmlns:prefix1="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:xs="http://www.w3.org/2001/XMLSchema">
    <grammars>
+      <xs:schema xmlns:tns="http://schemas.nav.gov.hu/NTCA/1.0/common" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.nav.gov.hu/NTCA/1.0/common">
+         <xs:element name="GeneralErrorHeaderResponse">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="tns:GeneralErrorHeaderResponseType">
+                     <xs:sequence />
+                  </xs:extension>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="GeneralExceptionResponse">
+            <xs:complexType>
+               <xs:complexContent>
+                  <xs:extension base="tns:BasicResultType">
+                     <xs:sequence />
+                  </xs:extension>
+               </xs:complexContent>
+            </xs:complexType>
+         </xs:element>
+         <xs:complexType name="BasicResponseType">
+            <xs:sequence>
+               <xs:element name="header" type="tns:BasicHeaderType" />
+               <xs:element name="result" type="tns:BasicResultType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="TechnicalValidationResultType">
+            <xs:sequence>
+               <xs:element name="validationResultCode" type="xs:string" />
+               <xs:element minOccurs="0" name="validationErrorCode" type="xs:string" />
+               <xs:element minOccurs="0" name="message" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="BasicHeaderType">
+            <xs:sequence>
+               <xs:element name="requestId" type="xs:string" />
+               <xs:element name="timestamp" type="xs:dateTime" />
+               <xs:element name="requestVersion" type="xs:string" />
+               <xs:element minOccurs="0" name="headerVersion" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="BasicResultType">
+            <xs:sequence>
+               <xs:element name="funcCode" type="xs:string" />
+               <xs:element minOccurs="0" name="errorCode" type="xs:string" />
+               <xs:element minOccurs="0" name="message" type="xs:string" />
+               <xs:element minOccurs="0" name="notifications" type="tns:NotificationsType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="NotificationsType">
+            <xs:sequence>
+               <xs:element maxOccurs="unbounded" name="notification" type="tns:NotificationType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="NotificationType">
+            <xs:sequence>
+               <xs:element name="notificationCode" type="xs:string" />
+               <xs:element name="notificationText" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="GeneralErrorHeaderResponseType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicResponseType">
+                  <xs:sequence />
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="CryptoType">
+            <xs:simpleContent>
+               <xs:extension base="xs:string">
+                  <xs:attribute name="cryptoType" type="xs:string" use="required" />
+               </xs:extension>
+            </xs:simpleContent>
+         </xs:complexType>
+         <xs:complexType name="BasicRequestType">
+            <xs:sequence>
+               <xs:element name="header" type="tns:BasicHeaderType" />
+               <xs:element name="user" type="tns:UserHeaderType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="UserHeaderType">
+            <xs:sequence>
+               <xs:element name="login" type="xs:string" />
+               <xs:element name="passwordHash" type="tns:CryptoType" />
+               <xs:element name="taxNumber" type="xs:string" />
+               <xs:element name="requestSignature" type="tns:CryptoType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:simpleType name="TechnicalResultCodeType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="CRITICAL" />
+               <xs:enumeration value="ERROR" />
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="BusinessResultCodeType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="ERROR" />
+               <xs:enumeration value="WARN" />
+               <xs:enumeration value="INFO" />
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="FunctionCodeType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="OK" />
+               <xs:enumeration value="ERROR" />
+            </xs:restriction>
+         </xs:simpleType>
+      </xs:schema>
       <xs:schema xmlns:ns1="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:ns2="http://schemas.nav.gov.hu/OSA/3.0/base" xmlns:tns="http://schemas.nav.gov.hu/OSA/3.0/api" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/api">
          <xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common" />
          <xs:import namespace="http://schemas.nav.gov.hu/OSA/3.0/base" />
@@ -193,219 +300,11 @@
                </xs:complexContent>
             </xs:complexType>
          </xs:element>
-         <xs:complexType name="ManageInvoiceRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="exchangeToken" type="xs:string" />
-                     <xs:element name="invoiceOperations" type="tns:InvoiceOperationListType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="BasicOnlineInvoiceRequestType">
-            <xs:complexContent>
-               <xs:extension base="ns1:BasicRequestType">
-                  <xs:sequence>
-                     <xs:element name="software" type="tns:SoftwareType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="InvoiceOperationListType">
-            <xs:sequence>
-               <xs:element name="compressedContent" type="xs:boolean" />
-               <xs:element maxOccurs="unbounded" name="invoiceOperation" type="tns:InvoiceOperationType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="InvoiceOperationType">
-            <xs:sequence>
-               <xs:element name="index" type="xs:int" />
-               <xs:element name="invoiceOperation" type="xs:string" />
-               <xs:element name="invoiceData" type="xs:base64Binary" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="SoftwareType">
-            <xs:sequence>
-               <xs:element name="softwareId" type="xs:string" />
-               <xs:element name="softwareName" type="xs:string" />
-               <xs:element name="softwareOperation" type="xs:string" />
-               <xs:element name="softwareMainVersion" type="xs:string" />
-               <xs:element name="softwareDevName" type="xs:string" />
-               <xs:element name="softwareDevContact" type="xs:string" />
-               <xs:element minOccurs="0" name="softwareDevCountryCode" type="xs:string" />
-               <xs:element minOccurs="0" name="softwareDevTaxNumber" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="QueryTransactionStatusRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="transactionId" type="xs:string" />
-                     <xs:element minOccurs="0" name="returnOriginalRequest" type="xs:boolean" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="QueryTransactionListRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="page" type="xs:int" />
-                     <xs:element name="insDate" type="tns:DateTimeIntervalParamType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="DateTimeIntervalParamType">
-            <xs:sequence>
-               <xs:element name="dateTimeFrom" type="xs:dateTime" />
-               <xs:element name="dateTimeTo" type="xs:dateTime" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="QueryTaxpayerRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="taxNumber" type="xs:string" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="QueryInvoiceDigestRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="page" type="xs:int" />
-                     <xs:element name="invoiceDirection" type="xs:string" />
-                     <xs:element name="invoiceQueryParams" type="tns:InvoiceQueryParamsType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="InvoiceQueryParamsType">
-            <xs:sequence>
-               <xs:element name="mandatoryQueryParams" type="tns:MandatoryQueryParamsType" />
-               <xs:element minOccurs="0" name="additionalQueryParams" type="tns:AdditionalQueryParamsType" />
-               <xs:element minOccurs="0" name="relationalQueryParams" type="tns:RelationalQueryParamsType" />
-               <xs:element minOccurs="0" name="transactionQueryParams" type="tns:TransactionQueryParamsType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="MandatoryQueryParamsType">
-            <xs:sequence>
-               <xs:element minOccurs="0" name="invoiceIssueDate" type="tns:DateIntervalParamType" />
-               <xs:element minOccurs="0" name="insDate" type="tns:DateTimeIntervalParamType" />
-               <xs:element minOccurs="0" name="originalInvoiceNumber" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="DateIntervalParamType">
-            <xs:sequence>
-               <xs:element name="dateFrom" type="xs:date" />
-               <xs:element name="dateTo" type="xs:date" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="AdditionalQueryParamsType">
-            <xs:sequence>
-               <xs:element minOccurs="0" name="taxNumber" type="xs:string" />
-               <xs:element minOccurs="0" name="groupMemberTaxNumber" type="xs:string" />
-               <xs:element minOccurs="0" name="name" type="xs:string" />
-               <xs:element minOccurs="0" name="invoiceCategory" type="xs:string" />
-               <xs:element minOccurs="0" name="paymentMethod" type="xs:string" />
-               <xs:element minOccurs="0" name="invoiceAppearance" type="xs:string" />
-               <xs:element minOccurs="0" name="source" type="xs:string" />
-               <xs:element minOccurs="0" name="currency" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="RelationalQueryParamsType">
-            <xs:sequence>
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceDelivery" nillable="true" type="tns:RelationQueryDateType" />
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="paymentDate" nillable="true" type="tns:RelationQueryDateType" />
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceNetAmount" nillable="true" type="tns:RelationQueryMonetaryType" />
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceNetAmountHUF" nillable="true" type="tns:RelationQueryMonetaryType" />
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceVatAmount" nillable="true" type="tns:RelationQueryMonetaryType" />
-               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceVatAmountHUF" nillable="true" type="tns:RelationQueryMonetaryType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="RelationQueryDateType">
-            <xs:sequence>
-               <xs:element name="queryOperator" type="xs:string" />
-               <xs:element name="queryValue" type="xs:date" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="RelationQueryMonetaryType">
-            <xs:sequence>
-               <xs:element name="queryOperator" type="xs:string" />
-               <xs:element name="queryValue" type="xs:decimal" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="TransactionQueryParamsType">
-            <xs:sequence>
-               <xs:element name="transactionId" type="xs:string" />
-               <xs:element minOccurs="0" name="index" type="xs:int" />
-               <xs:element minOccurs="0" name="invoiceOperation" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="QueryInvoiceDataRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="invoiceNumberQuery" type="tns:InvoiceNumberQueryType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="InvoiceNumberQueryType">
-            <xs:sequence>
-               <xs:element name="invoiceNumber" type="xs:string" />
-               <xs:element name="invoiceDirection" type="xs:string" />
-               <xs:element minOccurs="0" name="batchIndex" type="xs:int" />
-               <xs:element minOccurs="0" name="supplierTaxNumber" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="QueryInvoiceChainDigestRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="page" type="xs:int" />
-                     <xs:element name="invoiceChainQuery" type="tns:InvoiceChainQueryType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="InvoiceChainQueryType">
-            <xs:sequence>
-               <xs:element name="invoiceNumber" type="xs:string" />
-               <xs:element name="invoiceDirection" type="xs:string" />
-               <xs:element minOccurs="0" name="taxNumber" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="ManageAnnulmentRequestType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
-                  <xs:sequence>
-                     <xs:element name="exchangeToken" type="xs:string" />
-                     <xs:element name="annulmentOperations" type="tns:AnnulmentOperationListType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="AnnulmentOperationListType">
-            <xs:sequence>
-               <xs:element maxOccurs="unbounded" name="annulmentOperation" type="tns:AnnulmentOperationType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="AnnulmentOperationType">
-            <xs:sequence>
-               <xs:element name="index" type="xs:int" />
-               <xs:element name="annulmentOperation" type="xs:string" />
-               <xs:element name="invoiceAnnulment" type="xs:base64Binary" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="QueryInvoiceDataResponseType">
+         <xs:complexType name="QueryTransactionStatusResponseType">
             <xs:complexContent>
                <xs:extension base="tns:BasicOnlineInvoiceResponseType">
                   <xs:sequence>
-                     <xs:element minOccurs="0" name="invoiceDataResult" type="tns:InvoiceDataResultType" />
+                     <xs:element minOccurs="0" name="processingResults" type="tns:ProcessingResultListType" />
                   </xs:sequence>
                </xs:extension>
             </xs:complexContent>
@@ -415,54 +314,6 @@
                <xs:extension base="ns1:BasicResponseType">
                   <xs:sequence>
                      <xs:element name="software" type="tns:SoftwareType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="InvoiceDataResultType">
-            <xs:sequence>
-               <xs:element name="invoiceData" type="xs:base64Binary" />
-               <xs:element name="auditData" type="tns:AuditDataType" />
-               <xs:element name="compressedContentIndicator" type="xs:boolean" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="AuditDataType">
-            <xs:sequence>
-               <xs:element name="insdate" type="xs:dateTime" />
-               <xs:element name="insCusUser" type="xs:string" />
-               <xs:element name="source" type="xs:string" />
-               <xs:element minOccurs="0" name="transactionId" type="xs:string" />
-               <xs:element minOccurs="0" name="index" type="xs:int" />
-               <xs:element minOccurs="0" name="batchIndex" type="xs:int" />
-               <xs:element name="originalRequestVersion" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="GeneralErrorResponseType">
-            <xs:complexContent>
-               <xs:extension base="ns1:GeneralErrorHeaderResponseType">
-                  <xs:sequence>
-                     <xs:element name="software" type="tns:SoftwareType" />
-                     <xs:element maxOccurs="unbounded" minOccurs="0" name="technicalValidationMessages" nillable="true" type="ns1:TechnicalValidationResultType" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="TokenExchangeResponseType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceResponseType">
-                  <xs:sequence>
-                     <xs:element name="encodedExchangeToken" type="xs:base64Binary" />
-                     <xs:element name="tokenValidityFrom" type="xs:dateTime" />
-                     <xs:element name="tokenValidityTo" type="xs:dateTime" />
-                  </xs:sequence>
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="QueryTransactionStatusResponseType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicOnlineInvoiceResponseType">
-                  <xs:sequence>
-                     <xs:element minOccurs="0" name="processingResults" type="tns:ProcessingResultListType" />
                   </xs:sequence>
                </xs:extension>
             </xs:complexContent>
@@ -507,6 +358,39 @@
                <xs:element minOccurs="0" name="annulmentDecisionDate" type="xs:dateTime" />
                <xs:element minOccurs="0" name="annulmentDecisionUser" type="xs:string" />
             </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="SoftwareType">
+            <xs:sequence>
+               <xs:element name="softwareId" type="xs:string" />
+               <xs:element name="softwareName" type="xs:string" />
+               <xs:element name="softwareOperation" type="xs:string" />
+               <xs:element name="softwareMainVersion" type="xs:string" />
+               <xs:element name="softwareDevName" type="xs:string" />
+               <xs:element name="softwareDevContact" type="xs:string" />
+               <xs:element minOccurs="0" name="softwareDevCountryCode" type="xs:string" />
+               <xs:element minOccurs="0" name="softwareDevTaxNumber" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="GeneralErrorResponseType">
+            <xs:complexContent>
+               <xs:extension base="ns1:GeneralErrorHeaderResponseType">
+                  <xs:sequence>
+                     <xs:element name="software" type="tns:SoftwareType" />
+                     <xs:element maxOccurs="unbounded" minOccurs="0" name="technicalValidationMessages" nillable="true" type="ns1:TechnicalValidationResultType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="TokenExchangeResponseType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceResponseType">
+                  <xs:sequence>
+                     <xs:element name="encodedExchangeToken" type="xs:base64Binary" />
+                     <xs:element name="tokenValidityFrom" type="xs:dateTime" />
+                     <xs:element name="tokenValidityTo" type="xs:dateTime" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
          </xs:complexType>
          <xs:complexType name="QueryTransactionListResponseType">
             <xs:complexContent>
@@ -615,6 +499,34 @@
                <xs:element minOccurs="0" name="completenessIndicator" type="xs:boolean" />
             </xs:sequence>
          </xs:complexType>
+         <xs:complexType name="QueryInvoiceDataResponseType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceResponseType">
+                  <xs:sequence>
+                     <xs:element minOccurs="0" name="invoiceDataResult" type="tns:InvoiceDataResultType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="InvoiceDataResultType">
+            <xs:sequence>
+               <xs:element name="invoiceData" type="xs:base64Binary" />
+               <xs:element name="auditData" type="tns:AuditDataType" />
+               <xs:element name="compressedContentIndicator" type="xs:boolean" />
+               <xs:element minOccurs="0" name="electronicInvoiceHash" type="ns1:CryptoType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="AuditDataType">
+            <xs:sequence>
+               <xs:element name="insdate" type="xs:dateTime" />
+               <xs:element name="insCusUser" type="xs:string" />
+               <xs:element name="source" type="xs:string" />
+               <xs:element minOccurs="0" name="transactionId" type="xs:string" />
+               <xs:element minOccurs="0" name="index" type="xs:int" />
+               <xs:element minOccurs="0" name="batchIndex" type="xs:int" />
+               <xs:element name="originalRequestVersion" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
          <xs:complexType name="QueryInvoiceCheckResponseType">
             <xs:complexContent>
                <xs:extension base="tns:BasicOnlineInvoiceResponseType">
@@ -687,48 +599,204 @@
                </xs:extension>
             </xs:complexContent>
          </xs:complexType>
-         <xs:simpleType name="ManageInvoiceOperationType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="CREATE" />
-               <xs:enumeration value="MODIFY" />
-               <xs:enumeration value="STORNO" />
-            </xs:restriction>
-         </xs:simpleType>
-         <xs:simpleType name="SoftwareOperationType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="LOCAL_SOFTWARE" />
-               <xs:enumeration value="ONLINE_SERVICE" />
-            </xs:restriction>
-         </xs:simpleType>
-         <xs:simpleType name="InvoiceDirectionType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="INBOUND" />
-               <xs:enumeration value="OUTBOUND" />
-            </xs:restriction>
-         </xs:simpleType>
-         <xs:simpleType name="SourceType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="WEB" />
-               <xs:enumeration value="XML" />
-               <xs:enumeration value="MGM" />
-               <xs:enumeration value="OPG" />
-               <xs:enumeration value="OSZ" />
-            </xs:restriction>
-         </xs:simpleType>
-         <xs:simpleType name="QueryOperatorType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="EQ" />
-               <xs:enumeration value="GT" />
-               <xs:enumeration value="GTE" />
-               <xs:enumeration value="LT" />
-               <xs:enumeration value="LTE" />
-            </xs:restriction>
-         </xs:simpleType>
-         <xs:simpleType name="ManageAnnulmentOperationType">
-            <xs:restriction base="xs:string">
-               <xs:enumeration value="ANNUL" />
-            </xs:restriction>
-         </xs:simpleType>
+         <xs:complexType name="QueryInvoiceDataRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="invoiceNumberQuery" type="tns:InvoiceNumberQueryType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="BasicOnlineInvoiceRequestType">
+            <xs:complexContent>
+               <xs:extension base="ns1:BasicRequestType">
+                  <xs:sequence>
+                     <xs:element name="software" type="tns:SoftwareType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="InvoiceNumberQueryType">
+            <xs:sequence>
+               <xs:element name="invoiceNumber" type="xs:string" />
+               <xs:element name="invoiceDirection" type="xs:string" />
+               <xs:element minOccurs="0" name="batchIndex" type="xs:int" />
+               <xs:element minOccurs="0" name="supplierTaxNumber" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="QueryTransactionStatusRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="transactionId" type="xs:string" />
+                     <xs:element minOccurs="0" name="returnOriginalRequest" type="xs:boolean" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="QueryTransactionListRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="page" type="xs:int" />
+                     <xs:element name="insDate" type="tns:DateTimeIntervalParamType" />
+                     <xs:element minOccurs="0" name="requestStatus" type="xs:string" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="DateTimeIntervalParamType">
+            <xs:sequence>
+               <xs:element name="dateTimeFrom" type="xs:dateTime" />
+               <xs:element name="dateTimeTo" type="xs:dateTime" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="QueryTaxpayerRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="taxNumber" type="xs:string" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="QueryInvoiceDigestRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="page" type="xs:int" />
+                     <xs:element name="invoiceDirection" type="xs:string" />
+                     <xs:element name="invoiceQueryParams" type="tns:InvoiceQueryParamsType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="InvoiceQueryParamsType">
+            <xs:sequence>
+               <xs:element name="mandatoryQueryParams" type="tns:MandatoryQueryParamsType" />
+               <xs:element minOccurs="0" name="additionalQueryParams" type="tns:AdditionalQueryParamsType" />
+               <xs:element minOccurs="0" name="relationalQueryParams" type="tns:RelationalQueryParamsType" />
+               <xs:element minOccurs="0" name="transactionQueryParams" type="tns:TransactionQueryParamsType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="MandatoryQueryParamsType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="invoiceIssueDate" type="tns:DateIntervalParamType" />
+               <xs:element minOccurs="0" name="insDate" type="tns:DateTimeIntervalParamType" />
+               <xs:element minOccurs="0" name="originalInvoiceNumber" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="DateIntervalParamType">
+            <xs:sequence>
+               <xs:element name="dateFrom" type="xs:date" />
+               <xs:element name="dateTo" type="xs:date" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="AdditionalQueryParamsType">
+            <xs:sequence>
+               <xs:element minOccurs="0" name="taxNumber" type="xs:string" />
+               <xs:element minOccurs="0" name="groupMemberTaxNumber" type="xs:string" />
+               <xs:element minOccurs="0" name="name" type="xs:string" />
+               <xs:element minOccurs="0" name="invoiceCategory" type="xs:string" />
+               <xs:element minOccurs="0" name="paymentMethod" type="xs:string" />
+               <xs:element minOccurs="0" name="invoiceAppearance" type="xs:string" />
+               <xs:element minOccurs="0" name="source" type="xs:string" />
+               <xs:element minOccurs="0" name="currency" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="RelationalQueryParamsType">
+            <xs:sequence>
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceDelivery" nillable="true" type="tns:RelationQueryDateType" />
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="paymentDate" nillable="true" type="tns:RelationQueryDateType" />
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceNetAmount" nillable="true" type="tns:RelationQueryMonetaryType" />
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceNetAmountHUF" nillable="true" type="tns:RelationQueryMonetaryType" />
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceVatAmount" nillable="true" type="tns:RelationQueryMonetaryType" />
+               <xs:element maxOccurs="unbounded" minOccurs="0" name="invoiceVatAmountHUF" nillable="true" type="tns:RelationQueryMonetaryType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="RelationQueryDateType">
+            <xs:sequence>
+               <xs:element name="queryOperator" type="xs:string" />
+               <xs:element name="queryValue" type="xs:date" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="RelationQueryMonetaryType">
+            <xs:sequence>
+               <xs:element name="queryOperator" type="xs:string" />
+               <xs:element name="queryValue" type="xs:decimal" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="TransactionQueryParamsType">
+            <xs:sequence>
+               <xs:element name="transactionId" type="xs:string" />
+               <xs:element minOccurs="0" name="index" type="xs:int" />
+               <xs:element minOccurs="0" name="invoiceOperation" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="QueryInvoiceChainDigestRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="page" type="xs:int" />
+                     <xs:element name="invoiceChainQuery" type="tns:InvoiceChainQueryType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="InvoiceChainQueryType">
+            <xs:sequence>
+               <xs:element name="invoiceNumber" type="xs:string" />
+               <xs:element name="invoiceDirection" type="xs:string" />
+               <xs:element minOccurs="0" name="taxNumber" type="xs:string" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="ManageInvoiceRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="exchangeToken" type="xs:string" />
+                     <xs:element name="invoiceOperations" type="tns:InvoiceOperationListType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="InvoiceOperationListType">
+            <xs:sequence>
+               <xs:element name="compressedContent" type="xs:boolean" />
+               <xs:element maxOccurs="unbounded" name="invoiceOperation" type="tns:InvoiceOperationType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="InvoiceOperationType">
+            <xs:sequence>
+               <xs:element name="index" type="xs:int" />
+               <xs:element name="invoiceOperation" type="xs:string" />
+               <xs:element name="invoiceData" type="xs:base64Binary" />
+               <xs:element minOccurs="0" name="electronicInvoiceHash" type="ns1:CryptoType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="ManageAnnulmentRequestType">
+            <xs:complexContent>
+               <xs:extension base="tns:BasicOnlineInvoiceRequestType">
+                  <xs:sequence>
+                     <xs:element name="exchangeToken" type="xs:string" />
+                     <xs:element name="annulmentOperations" type="tns:AnnulmentOperationListType" />
+                  </xs:sequence>
+               </xs:extension>
+            </xs:complexContent>
+         </xs:complexType>
+         <xs:complexType name="AnnulmentOperationListType">
+            <xs:sequence>
+               <xs:element maxOccurs="unbounded" name="annulmentOperation" type="tns:AnnulmentOperationType" />
+            </xs:sequence>
+         </xs:complexType>
+         <xs:complexType name="AnnulmentOperationType">
+            <xs:sequence>
+               <xs:element name="index" type="xs:int" />
+               <xs:element name="annulmentOperation" type="xs:string" />
+               <xs:element name="invoiceAnnulment" type="xs:base64Binary" />
+            </xs:sequence>
+         </xs:complexType>
          <xs:simpleType name="InvoiceStatusType">
             <xs:restriction base="xs:string">
                <xs:enumeration value="RECEIVED" />
@@ -746,6 +814,21 @@
                <xs:enumeration value="VERIFICATION_REJECTED" />
             </xs:restriction>
          </xs:simpleType>
+         <xs:simpleType name="SoftwareOperationType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="LOCAL_SOFTWARE" />
+               <xs:enumeration value="ONLINE_SERVICE" />
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="SourceType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="WEB" />
+               <xs:enumeration value="XML" />
+               <xs:enumeration value="MGM" />
+               <xs:enumeration value="OPG" />
+               <xs:enumeration value="OSZ" />
+            </xs:restriction>
+         </xs:simpleType>
          <xs:simpleType name="RequestStatusType">
             <xs:restriction base="xs:string">
                <xs:enumeration value="RECEIVED" />
@@ -759,6 +842,7 @@
             <xs:restriction base="xs:string">
                <xs:enumeration value="ORGANIZATION" />
                <xs:enumeration value="SELF_EMPLOYED" />
+			   <xs:enumeration value="TAXABLE_PERSON" />
             </xs:restriction>
          </xs:simpleType>
          <xs:simpleType name="TaxpayerAddressTypeType">
@@ -768,100 +852,31 @@
                <xs:enumeration value="BRANCH" />
             </xs:restriction>
          </xs:simpleType>
-      </xs:schema>
-      <xs:schema xmlns:tns="http://schemas.nav.gov.hu/NTCA/1.0/common" attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://schemas.nav.gov.hu/NTCA/1.0/common">
-         <xs:element name="GeneralErrorHeaderResponse">
-            <xs:complexType>
-               <xs:complexContent>
-                  <xs:extension base="tns:GeneralErrorHeaderResponseType">
-                     <xs:sequence />
-                  </xs:extension>
-               </xs:complexContent>
-            </xs:complexType>
-         </xs:element>
-         <xs:element name="GeneralExceptionResponse">
-            <xs:complexType>
-               <xs:complexContent>
-                  <xs:extension base="tns:BasicResultType">
-                     <xs:sequence />
-                  </xs:extension>
-               </xs:complexContent>
-            </xs:complexType>
-         </xs:element>
-         <xs:complexType name="BasicRequestType">
-            <xs:sequence>
-               <xs:element name="header" type="tns:BasicHeaderType" />
-               <xs:element name="user" type="tns:UserHeaderType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="BasicHeaderType">
-            <xs:sequence>
-               <xs:element name="requestId" type="xs:string" />
-               <xs:element name="timestamp" type="xs:dateTime" />
-               <xs:element name="requestVersion" type="xs:string" />
-               <xs:element minOccurs="0" name="headerVersion" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="UserHeaderType">
-            <xs:sequence>
-               <xs:element name="login" type="xs:string" />
-               <xs:element name="passwordHash" type="tns:CryptoType" />
-               <xs:element name="taxNumber" type="xs:string" />
-               <xs:element name="requestSignature" type="tns:CryptoType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="CryptoType">
-            <xs:simpleContent>
-               <xs:extension base="xs:string">
-                  <xs:attribute name="cryptoType" type="xs:string" use="required" />
-               </xs:extension>
-            </xs:simpleContent>
-         </xs:complexType>
-         <xs:complexType name="BasicResponseType">
-            <xs:sequence>
-               <xs:element name="header" type="tns:BasicHeaderType" />
-               <xs:element name="result" type="tns:BasicResultType" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="BasicResultType">
-            <xs:sequence>
-               <xs:element name="funcCode" type="xs:string" />
-               <xs:element minOccurs="0" name="errorCode" type="xs:string" />
-               <xs:element minOccurs="0" name="message" type="xs:string" />
-               <xs:element minOccurs="0" name="notification" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:complexType name="GeneralErrorHeaderResponseType">
-            <xs:complexContent>
-               <xs:extension base="tns:BasicResponseType">
-                  <xs:sequence />
-               </xs:extension>
-            </xs:complexContent>
-         </xs:complexType>
-         <xs:complexType name="TechnicalValidationResultType">
-            <xs:sequence>
-               <xs:element name="validationResultCode" type="xs:string" />
-               <xs:element minOccurs="0" name="validationErrorCode" type="xs:string" />
-               <xs:element minOccurs="0" name="message" type="xs:string" />
-            </xs:sequence>
-         </xs:complexType>
-         <xs:simpleType name="FunctionCodeType">
+         <xs:simpleType name="ManageInvoiceOperationType">
             <xs:restriction base="xs:string">
-               <xs:enumeration value="OK" />
-               <xs:enumeration value="ERROR" />
+               <xs:enumeration value="CREATE" />
+               <xs:enumeration value="MODIFY" />
+               <xs:enumeration value="STORNO" />
             </xs:restriction>
          </xs:simpleType>
-         <xs:simpleType name="TechnicalResultCodeType">
+         <xs:simpleType name="InvoiceDirectionType">
             <xs:restriction base="xs:string">
-               <xs:enumeration value="CRITICAL" />
-               <xs:enumeration value="ERROR" />
+               <xs:enumeration value="INBOUND" />
+               <xs:enumeration value="OUTBOUND" />
             </xs:restriction>
          </xs:simpleType>
-         <xs:simpleType name="BusinessResultCodeType">
+         <xs:simpleType name="QueryOperatorType">
             <xs:restriction base="xs:string">
-               <xs:enumeration value="ERROR" />
-               <xs:enumeration value="WARN" />
-               <xs:enumeration value="INFO" />
+               <xs:enumeration value="EQ" />
+               <xs:enumeration value="GT" />
+               <xs:enumeration value="GTE" />
+               <xs:enumeration value="LT" />
+               <xs:enumeration value="LTE" />
+            </xs:restriction>
+         </xs:simpleType>
+         <xs:simpleType name="ManageAnnulmentOperationType">
+            <xs:restriction base="xs:string">
+               <xs:enumeration value="ANNUL" />
             </xs:restriction>
          </xs:simpleType>
       </xs:schema>
