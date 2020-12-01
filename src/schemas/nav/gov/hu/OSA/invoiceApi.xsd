@@ -3,7 +3,7 @@
 # Project: Magyar Online Számla Rendszer invoiceApi XML séma
 # Author: NAV Informatikai Intézet
 
-# Version: v3.0 2020/07/31
+# Version: v3.0 2020/11/09
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/3.0/api" xmlns:data="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/api" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common"/>
@@ -56,6 +56,12 @@
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Egyéni vállalkozó</xs:documentation>
 					<xs:documentation xml:lang="en">Self employed private entrepreneur</xs:documentation>
+				</xs:annotation>
+			</xs:enumeration>
+			<xs:enumeration value="TAXABLE_PERSON">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Adószámos magánszemély</xs:documentation>
+					<xs:documentation xml:lang="en">Private person with tax number</xs:documentation>
 				</xs:annotation>
 			</xs:enumeration>
 		</xs:restriction>
@@ -659,13 +665,13 @@
 			<xs:documentation xml:lang="en">Invoice chain digest query result</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="currentPage" type="common:PageType">
+			<xs:element name="currentPage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A jelenleg lekérdezett lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The currently queried page count</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="availablePage" type="common:PageType">
+			<xs:element name="availablePage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A lekérdezés eredménye szerint elérhető utolsó lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
@@ -819,13 +825,13 @@
 			<xs:documentation xml:lang="en">Invoice query results</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="currentPage" type="common:PageType">
+			<xs:element name="currentPage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A jelenleg lekérdezett lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The currently queried page count</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="availablePage" type="common:PageType">
+			<xs:element name="availablePage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A lekérdezés eredménye szerint elérhető utolsó lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>
@@ -1389,7 +1395,7 @@
 		<xs:complexContent>
 			<xs:extension base="BasicOnlineInvoiceRequestType">
 				<xs:sequence>
-					<xs:element name="page" type="common:PageType">
+					<xs:element name="page" type="common:RequestPageType">
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A lekérdezni kívánt lap száma</xs:documentation>
 							<xs:documentation xml:lang="en">The queried page count</xs:documentation>
@@ -1485,7 +1491,7 @@
 		<xs:complexContent>
 			<xs:extension base="BasicOnlineInvoiceRequestType">
 				<xs:sequence>
-					<xs:element name="page" type="common:PageType">
+					<xs:element name="page" type="common:RequestPageType">
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A lekérdezni kívánt lap száma</xs:documentation>
 							<xs:documentation xml:lang="en">The queried page count</xs:documentation>
@@ -1581,7 +1587,7 @@
 		<xs:complexContent>
 			<xs:extension base="BasicOnlineInvoiceRequestType">
 				<xs:sequence>
-					<xs:element name="page" type="common:PageType">
+					<xs:element name="page" type="common:RequestPageType">
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A lekérdezni kívánt lap száma</xs:documentation>
 							<xs:documentation xml:lang="en">The queried page count</xs:documentation>
@@ -1591,6 +1597,12 @@
 						<xs:annotation>
 							<xs:documentation xml:lang="hu">A lekérdezni kívánt tranzakciók kiadásának szerver oldali ideje UTC időben</xs:documentation>
 							<xs:documentation xml:lang="en">The queried transaction's insert date on server side in UTC time</xs:documentation>
+						</xs:annotation>
+					</xs:element>
+					<xs:element name="requestStatus" type="RequestStatusType" minOccurs="0">
+						<xs:annotation>
+							<xs:documentation xml:lang="hu">A kérés feldolgozási státusza</xs:documentation>
+							<xs:documentation xml:lang="en">Processing status of the request</xs:documentation>
 						</xs:annotation>
 					</xs:element>
 				</xs:sequence>
@@ -1911,13 +1923,13 @@
 			<xs:documentation xml:lang="en">Transaction query results</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="currentPage" type="common:PageType">
+			<xs:element name="currentPage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A jelenleg lekérdezett lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The currently queried page count</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="availablePage" type="common:PageType">
+			<xs:element name="availablePage" type="common:ResponsePageType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A lekérdezés eredménye szerint elérhető utolsó lapszám</xs:documentation>
 					<xs:documentation xml:lang="en">The highest available page count matching the query</xs:documentation>

@@ -3,11 +3,37 @@
 # Project: Magyar Online Számla Rendszer invoiceData XML séma
 # Author: NAV Informatikai Intézet
 
-# Version: v3.0 2020/09/16
+# Version: v3.0 2020/11/23
 -->
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" targetNamespace="http://schemas.nav.gov.hu/OSA/3.0/data" elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xs:import namespace="http://schemas.nav.gov.hu/NTCA/1.0/common"/>
 	<xs:import namespace="http://schemas.nav.gov.hu/OSA/3.0/base"/>
+	<xs:simpleType name="CustomerVatStatusType">
+			<xs:annotation>
+				<xs:documentation xml:lang="hu">Vevő ÁFA szerinti státusz típusa</xs:documentation>
+				<xs:documentation xml:lang="en">Customers status type by VAT</xs:documentation>
+			</xs:annotation>
+			<xs:restriction base="common:AtomicStringType15">
+				<xs:enumeration value="DOMESTIC">
+					<xs:annotation>
+						<xs:documentation xml:lang="hu">Belföldi ÁFA alany</xs:documentation>
+						<xs:documentation xml:lang="en">Domestic VAT subject</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="OTHER">
+					<xs:annotation>
+						<xs:documentation xml:lang="hu">Egyéb (belföldi nem ÁFA alany, nem természetes személy, külföldi ÁFA alany és külföldi nem ÁFA alany, nem természetes személy)</xs:documentation>
+						<xs:documentation xml:lang="en">Other (domestic non-VAT subject, non-natural person, foreign VAT subject and foreign non-VAT subject, non-natural person)</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+				<xs:enumeration value="PRIVATE_PERSON">
+					<xs:annotation>
+						<xs:documentation xml:lang="hu">Nem ÁFA alany (belföldi vagy külföldi) természetes személy</xs:documentation>
+						<xs:documentation xml:lang="en">Non-VAT subject (domestic or foreign) natural person</xs:documentation>
+					</xs:annotation>
+				</xs:enumeration>
+			</xs:restriction>
+	</xs:simpleType>
 	<xs:simpleType name="DataNameType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Az adatmező egyedi azonosító típusa</xs:documentation>
@@ -36,7 +62,7 @@
 		<xs:restriction base="xs:decimal">
 			<xs:totalDigits value="14"/>
 			<xs:fractionDigits value="6"/>
-			<xs:minInclusive value="0"/>
+			<xs:minExclusive value="0"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="LineNatureIndicatorType">
@@ -664,10 +690,16 @@
 					<xs:documentation xml:lang="en">General ledger account numbers</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="glnNumbers" type="GlnNumbersType" minOccurs="0">
+			<xs:element name="glnNumbersSupplier" type="GlnNumbersType" minOccurs="0">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Globális helyazonosító szám(ok)</xs:documentation>
-					<xs:documentation xml:lang="en">Global location numbers</xs:documentation>
+					<xs:documentation xml:lang="hu">Kiállítói globális helyazonosító szám(ok)</xs:documentation>
+					<xs:documentation xml:lang="en">Supplier's global location numbers</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="glnNumbersCustomer" type="GlnNumbersType" minOccurs="0">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Vevői globális helyazonosító szám(ok)</xs:documentation>
+					<xs:documentation xml:lang="en">Customer's global location numbers</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="materialNumbers" type="MaterialNumbersType" minOccurs="0">
@@ -744,10 +776,10 @@
 			<xs:documentation xml:lang="en">Customer data</xs:documentation>
 		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="privatePersonIndicator" type="xs:boolean">
+			<xs:element name="customerVatStatus" type="CustomerVatStatusType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Magánszemély vevő jelölése</xs:documentation>
-					<xs:documentation xml:lang="hu">Customer's private person indicator</xs:documentation>
+					<xs:documentation xml:lang="hu">Vevő ÁFA szerinti státusza</xs:documentation>
+					<xs:documentation xml:lang="en">Customers status by VAT</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="customerVatData" type="CustomerVatDataType" minOccurs="0">
@@ -860,7 +892,7 @@
 					<xs:documentation xml:lang="en">Case notation with code</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="reason" type="common:SimpleText100NotBlankType">
+			<xs:element name="reason" type="common:SimpleText200NotBlankType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Az eset leírása szöveggel</xs:documentation>
 					<xs:documentation xml:lang="en">Case notation with text</xs:documentation>
@@ -1538,12 +1570,6 @@
 					<xs:documentation xml:lang="en">The value is true if the item is bottle/container deposit</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="marginSchemeIndicator" type="MarginSchemeType" minOccurs="0">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Különbözet szerinti szabályozás jelölése - ÁFA tv. 169. § p) q)</xs:documentation>
-					<xs:documentation xml:lang="en">Marking the margin-scheme taxation as per section 169 (p)(q)</xs:documentation>
-				</xs:annotation>
-			</xs:element>
 			<xs:element name="obligatedForProductFee" type="xs:boolean" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Értéke true ha a tételt termékdíj fizetési kötelezettség terheli</xs:documentation>
@@ -1652,7 +1678,7 @@
 					<xs:documentation xml:lang="en">Engine number</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="firstEntryIntoService" type="base:InvoiceDateType">
+			<xs:element name="firstEntryIntoService" type="base:InvoiceDateType" minOccurs="0">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Első forgalomba helyezés időpontja</xs:documentation>
 					<xs:documentation xml:lang="en">First entry into service</xs:documentation>
@@ -2140,6 +2166,26 @@
 			</xs:element>
 		</xs:sequence>
 	</xs:complexType>
+	<xs:complexType name="VatAmountMismatchType">
+		<xs:annotation>
+			<xs:documentation xml:lang="hu">Adóalap és felszámított adó eltérésének adatai</xs:documentation>
+			<xs:documentation xml:lang="en">Data of mismatching tax base and levied tax</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="vatRate" type="RateType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Adómérték, adótartalom</xs:documentation>
+					<xs:documentation xml:lang="en">VAT rate, VAT content</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="case" type="common:SimpleText50NotBlankType">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Az eset leírása kóddal</xs:documentation>
+					<xs:documentation xml:lang="en">Case notation with code</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
 	<xs:complexType name="VatRateGrossDataType">
 		<xs:annotation>
 			<xs:documentation xml:lang="hu">Adott adómértékhez tartozó bruttó adatok</xs:documentation>
@@ -2210,28 +2256,28 @@
 					<xs:documentation xml:lang="en">Out of scope of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="vatDomesticReverseCharge" type="xs:boolean">
+			<xs:element name="vatDomesticReverseCharge" type="xs:boolean" fixed="true">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">A belföldi fordított adózás jelölése - ÁFA tv. 142. §</xs:documentation>
 					<xs:documentation xml:lang="en">Marking the national is reverse charge taxation - section 142 of the VAT law</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="marginSchemeVat" type="xs:boolean">
+			<xs:element name="marginSchemeIndicator" type="MarginSchemeType">
 				<xs:annotation>
-					<xs:documentation xml:lang="hu">Áthárított adót tartalmazó különbözet szerinti adózás</xs:documentation>
-					<xs:documentation xml:lang="en">Margin scheme including input tax</xs:documentation>
+					<xs:documentation xml:lang="hu">Különbözet szerinti szabályozás jelölése - ÁFA tv. 169. § p) q)</xs:documentation>
+					<xs:documentation xml:lang="en">Marking the margin-scheme taxation as per section 169 (p)(q)</xs:documentation>
 				</xs:annotation>
 			</xs:element>
-			<xs:element name="marginSchemeNoVat" type="xs:boolean">
-				<xs:annotation>
-					<xs:documentation xml:lang="hu">Áthárított adót nem tartalmazó különbözet szerinti adózás</xs:documentation>
-					<xs:documentation xml:lang="en">Margin scheme not including input tax</xs:documentation>
-				</xs:annotation>
-			</xs:element>
-			<xs:element name="vatAmountMismatch" type="DetailedReasonType">
+			<xs:element name="vatAmountMismatch" type="VatAmountMismatchType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Adóalap és felszámított adó eltérésének esetei</xs:documentation>
 					<xs:documentation xml:lang="en">Different cases of mismatching tax base and levied tax</xs:documentation>
+				</xs:annotation>
+			</xs:element>
+			<xs:element name="noVatCharge" type="xs:boolean" fixed="true">
+				<xs:annotation>
+					<xs:documentation xml:lang="hu">Nincs felszámított áfa a 17. § alapján</xs:documentation>
+					<xs:documentation xml:lang="en">No VAT charged under Section 17</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:choice>
