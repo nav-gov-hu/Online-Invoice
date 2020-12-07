@@ -114,6 +114,7 @@ Több jelzés érkezett githubon és egyéb fórumokon, hogy az eddigi privatePe
 - UNKNOWN érték bevezetése a case értékek közé: előzmény nélküli és olyan módosító/sztornó számláknál, melyek 3.0 előtti verziójú számlára hivatkoznak, nem minden esetben határozható meg a pontos case érték a vatExemption/vatOutOfScope/vatAmountMismatch esetekben. Az UNKNOWN értékkel így bővült mindhárom esetben a case értékkészlet. Ez az érték kizárólag ilyen esetekben megadható.
 - vatExemption és vatOutOfScope esetekben a reason mező hossza 100-ról 200-ra változott
 - a boolean típusú adómértékeknél (vatDomesticReverseCharge, noVatCharge) csak a logikai igaz (true vagy 1) érték elfogadott séma szinten (fixed:true attribútum), hiszen üzletileg csak ekkor van értelme az adott módozat jelölésének.
+- THK érték kivezetése a vatOutOfScope/case elfogadott értékek közül tétel és összesítő szinten is
 
 #### 2.8.3) ERROR módosítások
 
@@ -394,6 +395,7 @@ There have been several indications on github and other forums that not all busi
 - Introduction of UNKNOWN value among case values: for modify / storno invoices referenced to invoices without previous data deport or having version pre-3.0, the exact case value cannot be determined in all cases in the vatExemption / vatOutOfScope / vatAmountMismatch cases. In this case, the case value set was expanded with the UNKNOWN value in all three cases. This value can only be specified in such cases.
 - in vatExemption and vatOutOfScope nodes the reason field length changed from 100 to 200
 - for boolean vat rates (vatDomesticReverseCharge, noVatCharge) only the logical true value (true or 1) is accepted at the schema level (fixed: true attribute), since only then does it make sense to indicate the given mode in business.
+- remove THK value from vatOutOfScope / case accepted values at both item and summary level.
 
 #### 2.8.3) ERROR modifications
 

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<InvoiceData xmlns="http://schemas.nav.gov.hu/OSA/3.0/data" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://schemas.nav.gov.hu/OSA/3.0/data invoiceData.xsd"
+xmlns:common="http://schemas.nav.gov.hu/NTCA/1.0/common" xmlns:base="http://schemas.nav.gov.hu/OSA/3.0/base" >
+	<invoiceNumber>ZZZ000015</invoiceNumber>
+	<invoiceIssueDate>2021-05-25</invoiceIssueDate>
+	<completenessIndicator>false</completenessIndicator>
+	<invoiceMain>
+		<invoice>
+			<invoiceReference>
+				<originalInvoiceNumber>ZZZ000001</originalInvoiceNumber>
+				<modifyWithoutMaster>false</modifyWithoutMaster>
+				<modificationIndex>2</modificationIndex>
+			</invoiceReference>
+			<invoiceHead>
+				<supplierInfo>
+					<supplierTaxNumber>
+						<base:taxpayerId>99999999</base:taxpayerId>
+						<base:vatCode>2</base:vatCode>
+						<base:countyCode>41</base:countyCode>
+					</supplierTaxNumber>
+					<supplierName>Értékesítő Kft</supplierName>
+					<supplierAddress>
+						<base:detailedAddress>
+							<base:countryCode>HU</base:countryCode>
+							<base:postalCode>1234</base:postalCode>
+							<base:city>Budapest</base:city>
+							<base:streetName>Hármas</base:streetName>
+							<base:publicPlaceCategory>utca</base:publicPlaceCategory>
+							<base:number>1</base:number>
+						</base:detailedAddress>
+					</supplierAddress>
+					<supplierBankAccountNumber>12345678-12345678-12345678</supplierBankAccountNumber>
+				</supplierInfo>
+				<customerInfo>
+					<customerVatStatus>DOMESTIC</customerVatStatus>
+					<customerVatData>
+						<customerTaxNumber>
+							<base:taxpayerId>99887764</base:taxpayerId>
+							<base:vatCode>2</base:vatCode>
+							<base:countyCode>02</base:countyCode>
+						</customerTaxNumber>
+					</customerVatData>
+					<customerName>Beszerző Kft</customerName>
+					<customerAddress>
+						<base:detailedAddress>
+							<base:countryCode>HU</base:countryCode>
+							<base:postalCode>7600</base:postalCode>
+							<base:city>Pécs</base:city>
+							<base:streetName>Északi</base:streetName>
+							<base:publicPlaceCategory>sugárút</base:publicPlaceCategory>
+							<base:number>123</base:number>
+						</base:detailedAddress>
+					</customerAddress>
+				</customerInfo>
+				<invoiceDetail>
+<!-- Amennyiben a módosítás az invoiceDetail valamely elemét érinti, úgy az eredeti számla nem változó adatait is meg kell ismételni-->				
+					<invoiceCategory>NORMAL</invoiceCategory>
+					<invoiceDeliveryDate>2021-05-10</invoiceDeliveryDate>
+					<currencyCode>HUF</currencyCode>
+					<exchangeRate>1</exchangeRate>
+					<paymentMethod>TRANSFER</paymentMethod>
+					<invoiceAppearance>PAPER</invoiceAppearance>
+					<additionalInvoiceData>
+						<dataName>M00001_S0102</dataName>
+						<dataDescription>Módosítás oka</dataDescription>
+						<dataValue>A ZZ000001 számla teljesítési időpontja 2021.05.10 a ZZZ000009 módosítón jelzett dátummal szemben. A számla korábban már módosított egyéb adatai változatlanok</dataValue>
+					</additionalInvoiceData>
+				</invoiceDetail>
+			</invoiceHead>
+			<invoiceSummary>
+				<summaryNormal>
+					<summaryByVatRate>
+						<vatRate>
+							<vatPercentage>0.27</vatPercentage>
+						</vatRate>
+						<vatRateNetData>
+							<vatRateNetAmount>0</vatRateNetAmount>
+							<vatRateNetAmountHUF>0</vatRateNetAmountHUF>
+						</vatRateNetData>
+						<vatRateVatData>
+							<vatRateVatAmount>0</vatRateVatAmount>
+							<vatRateVatAmountHUF>0</vatRateVatAmountHUF>
+						</vatRateVatData>
+					</summaryByVatRate>
+					<invoiceNetAmount>0</invoiceNetAmount>
+					<invoiceNetAmountHUF>0</invoiceNetAmountHUF>
+					<invoiceVatAmount>0</invoiceVatAmount>
+					<invoiceVatAmountHUF>0</invoiceVatAmountHUF>
+				</summaryNormal>
+				<summaryGrossData>
+					<invoiceGrossAmount>0</invoiceGrossAmount>
+					<invoiceGrossAmountHUF>0</invoiceGrossAmountHUF>
+				</summaryGrossData>
+			</invoiceSummary>
+		</invoice>
+	</invoiceMain>
+</InvoiceData>
