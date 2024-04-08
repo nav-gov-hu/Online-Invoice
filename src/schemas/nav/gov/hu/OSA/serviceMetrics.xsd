@@ -81,7 +81,7 @@
 			<xs:element name="metricType" type="MetricTypeType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Metrika típusa</xs:documentation>
-					<xs:documentation xml:lang="hu">Metric's type</xs:documentation>
+					<xs:documentation xml:lang="en">Metric's type</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 			<xs:element name="metricDescription" type="MetricDescriptionType" minOccurs="3" maxOccurs="3">
