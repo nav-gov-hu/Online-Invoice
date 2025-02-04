@@ -1201,7 +1201,7 @@
 			<xs:element name="invoiceDetail" type="InvoiceDetailType">
 				<xs:annotation>
 					<xs:documentation xml:lang="hu">Számla részletező adatok</xs:documentation>
-					<xs:documentation xml:lang="en">Invoice detail adata</xs:documentation>
+					<xs:documentation xml:lang="en">Invoice detail data</xs:documentation>
 				</xs:annotation>
 			</xs:element>
 		</xs:sequence>
