@@ -9,7 +9,7 @@ Teszt rendszer API: https://api-test.onlineszamla.nav.gov.hu/
 Éles rendszer frontend: https://onlineszamla.nav.gov.hu/  
 Éles rendszer API: https://api.onlineszamla.nav.gov.hu/  
 
-Aktuális API dokumentáció: [Online Szamla_interfesz specifikáció_HU_v3.0 rendered](https://github.com/nav-gov-hu/Online-Invoice/blob/master/docs/API%20docs/hu/Online%20Szamla_interfesz%20specifik%C3%A1ci%C3%B3_HU_v3.0.pdf) [Online Szamla_interfesz specifikáció_HU_v3.0 RAW](https://raw.githubusercontent.com/nav-gov-hu/Online-Invoice/master/docs/API%20docs/hu/Online%20Szamla_interfesz%20specifik%C3%A1ci%C3%B3_HU_v3.0.pdf)
+Aktuális API dokumentáció: [Online Szamla_interfesz specifikáció_HU_v3.0 ](https://github.com/nav-gov-hu/Online-Invoice/tree/master/docs/API%20docs/hu)
 
 Fejlesztői dokumentációk: https://onlineszamla.nav.gov.hu/dokumentaciok  
 Fejlesztői napló: https://onlineszamla.nav.gov.hu/fejlesztoi_naplo  
